@@ -1,0 +1,760 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f6e56">
+<title>แบบสำรวจผลิตภัณฑ์ลดใช้พลังงาน</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f4f8;--card:#fff;--ink:#1d2433;--mute:#667085;--line:#e1e6ef;--pri:#0f6e56;--pri2:#e3f2ec;--warn:#b54708;--warnbg:#fff4e5;--err:#b42318;--errbg:#fee4e2;--okbg:#e3f6ea;--ok:#127a3a;--r:14px}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Sarabun','Noto Sans Thai','Leelawadee UI',Tahoma,sans-serif;font-size:16px;-webkit-text-size-adjust:100%}
+button{font-family:inherit}
+header#top{position:sticky;top:0;z-index:30;background:var(--pri);color:#fff;padding:10px 14px;padding-top:calc(10px + env(safe-area-inset-top));display:flex;align-items:center;gap:10px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+header#top h1{font-size:17px;margin:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#saved{font-size:12px;opacity:.85}
+.hbtn{background:rgba(255,255,255,.18);border:0;color:#fff;border-radius:10px;padding:8px 12px;font-size:14px;cursor:pointer}
+main{max-width:880px;margin:0 auto;padding:12px 12px 110px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.sec{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-weight:700;font-size:16px;flex-wrap:wrap}
+.sec .n{background:var(--pri);color:#fff;border-radius:8px;padding:1px 8px;font-size:13px}
+.sub{font-size:13px;color:var(--mute);margin:-4px 0 10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:8px}
+.fld{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mute);min-width:0}
+.fld.full{grid-column:1/-1}.fld.w2{grid-column:span 2}
+.ib{display:flex;align-items:center;border:1px solid var(--line);border-radius:10px;background:#fbfcfe;overflow:hidden}
+.ib:focus-within{border-color:var(--pri);box-shadow:0 0 0 3px var(--pri2)}
+.ib input,.ib select,.ib textarea{flex:1;min-width:0;width:100%;border:0;background:transparent;padding:10px;font:inherit;font-size:16px;color:var(--ink);outline:none}
+.ib textarea{min-height:70px;resize:vertical}
+.ib em{font-style:normal;font-size:12px;color:var(--mute);padding:0 10px 0 2px;white-space:nowrap}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg label{cursor:pointer}.seg input{display:none}
+.seg b{display:inline-block;font-weight:600;font-size:14px;color:var(--ink);padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:#fff}
+.seg input:checked+b{background:var(--pri);border-color:var(--pri);color:#fff}
+.radio{margin-bottom:10px}
+.cbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px;margin-bottom:8px}
+.cb{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;cursor:pointer;font-size:15px}
+.cb input{width:20px;height:20px;accent-color:var(--pri);flex:none}
+.cb:has(input:checked){background:var(--pri2);border-color:#9fd3c0}
+.btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;padding:9px 13px;font-size:14px;font-weight:600;cursor:pointer}
+.btn.pri{background:var(--pri);border-color:var(--pri);color:#fff}
+.btn.danger{color:var(--err);border-color:#f3c3be}
+.btn.big{padding:13px 16px;font-size:16px}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.tip{font-size:13px;color:var(--mute);background:#f7f9fc;border-radius:10px;padding:8px 10px;margin:0 0 10px}
+.calcs{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin:6px 0}
+.calc{background:var(--pri2);border-radius:10px;padding:8px 10px;font-size:13px;color:#245c4b;display:flex;flex-direction:column}
+.calc b{font-size:18px;color:var(--pri)}
+.calc.sm b{font-size:16px}
+.tbl .row{border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:8px;background:#fcfdfe}
+.rh{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.rh i{font-style:normal;background:#eef1f6;border-radius:6px;padding:1px 7px;font-size:12px;color:var(--mute)}
+.rh b{font-size:15px}
+.rh input{flex:1;min-width:120px;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font:inherit;font-size:15px;background:#fff}
+.rg{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none;position:sticky;top:52px;z-index:10;background:var(--bg)}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 12px;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer;white-space:nowrap}
+.chip i{font-style:normal;color:var(--mute);margin-right:4px}
+.chip.on{background:var(--pri);color:#fff;border-color:var(--pri)}.chip.on i{color:#cfe9df}
+.stephead{display:flex;align-items:center;gap:12px;margin:2px 0 12px}
+.stephead .big{width:52px;height:52px;border-radius:14px;background:#fff;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:26px;flex:none}
+.stephead small{color:var(--mute)}.stephead h2{margin:0;font-size:20px}
+#bnav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:#fff;border-top:1px solid var(--line);display:flex;gap:8px;align-items:center;padding:10px 12px;padding-bottom:calc(10px + env(safe-area-inset-bottom))}
+#bnav[hidden]{display:none}
+#bnav button{flex:1}#bnav span{font-size:12px;color:var(--mute);text-align:center;min-width:56px}
+.badge{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:2px 9px}
+.badge.ok{background:var(--okbg);color:var(--ok)}.badge.warn{background:var(--warnbg);color:var(--warn)}.badge.err{background:var(--errbg);color:var(--err)}
+.hero{background:linear-gradient(135deg,#0f6e56,#14866a);color:#fff;border:0}
+.hero b{font-size:19px;display:block}.hero span{font-size:14px;opacity:.9}
+.hero .btn{border-color:transparent}
+.shop .sh-top{display:flex;gap:12px;align-items:center}
+.av{width:46px;height:46px;border-radius:12px;background:#fff3dc;display:flex;align-items:center;justify-content:center;font-size:24px;flex:none}
+.sh-i{display:flex;flex-direction:column;min-width:0}.sh-i b{font-size:17px}.sh-i span{font-size:13px;color:var(--mute)}
+.prog{height:8px;background:#edf0f5;border-radius:99px;overflow:hidden;margin:12px 0 6px}.prog i{display:block;height:100%;background:var(--pri)}
+.sh-meta{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--mute);margin-bottom:6px}
+.empty{text-align:center;color:var(--mute);padding:40px 10px}
+.warnbox{border-radius:12px;padding:10px 12px;margin-bottom:8px;font-size:14px;display:flex;gap:10px;align-items:flex-start}
+.warnbox.warn{background:var(--warnbg);color:#7a3306}.warnbox.err{background:var(--errbg);color:#7a1a12}.warnbox.info{background:#eef4ff;color:#1e3a8a}
+.warnbox button{margin-left:auto;flex:none}
+.lay{position:relative;width:100%;aspect-ratio:1120/520;border:2px dashed #b8c2d3;border-radius:10px;background:#fbfcfe;touch-action:none;overflow:hidden;user-select:none;-webkit-user-select:none}
+.li{position:absolute;border:2px solid #2a4ea8;background:rgba(42,78,168,.06);display:flex;align-items:center;justify-content:center;text-align:center;color:#1a3a9c;font-weight:600;font-size:13px;padding:4px;cursor:move;line-height:1.25}
+.li.circle{border-radius:50%}
+.li.sel{border-color:var(--pri);box-shadow:0 0 0 3px var(--pri2);background:rgba(15,110,86,.08)}
+.li .rz{position:absolute;right:-7px;bottom:-7px;width:18px;height:18px;border-radius:50%;background:var(--pri);border:2px solid #fff;display:none;cursor:nwse-resize}
+.li.sel .rz{display:block}
+.selbox{margin-top:10px;border-top:1px dashed var(--line);padding-top:10px}
+.phgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.ph-it{position:relative;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
+.ph-it img{width:100%;height:110px;object-fit:cover;display:block}
+.ph-it input{width:100%;border:0;border-top:1px solid var(--line);padding:7px;font:inherit;font-size:13px}
+.ph-it button{position:absolute;top:5px;right:5px;border:0;background:rgba(0,0,0,.6);color:#fff;border-radius:50%;width:28px;height:28px;cursor:pointer}
+.ph-add{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:140px;border:2px dashed #b8c2d3;border-radius:10px;color:var(--pri);font-size:26px;cursor:pointer;background:#fbfcfe}
+.ph-add span{font-size:13px;font-weight:600}
+.std-row{border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:8px}
+.std-h{display:flex;align-items:center;gap:10px}
+.bdg-s{width:46px;height:46px;border-radius:50%;border:2px solid #333;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex:none;text-align:center;line-height:1.1}
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px}
+.kpi span{font-size:12px;color:var(--mute);display:block}.kpi b{font-size:22px;color:var(--pri)}.kpi small{color:var(--mute)}
+#toast{position:fixed;left:50%;bottom:86px;transform:translateX(-50%);background:#1d2433;color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;z-index:60;opacity:0;transition:.25s;pointer-events:none;max-width:90vw;text-align:center}
+#toast.on{opacity:1}
+.stbanner{background:var(--errbg);color:#7a1a12;border-radius:12px;padding:10px 12px;font-size:14px;margin-bottom:12px}
+
+/* ---------- PRINT ---------- */
+#printRoot{display:none;background:#5b6270;min-height:100vh}
+body.preview header#top,body.preview #app,body.preview #bnav{display:none}
+body.preview #printRoot{display:block}
+.pvbar{position:sticky;top:0;z-index:5;display:flex;gap:8px;padding:10px;background:#2b2f38;align-items:center;flex-wrap:wrap}
+.pvbar span{color:#cfd5e1;font-size:13px;flex:1;min-width:120px}
+.pages{padding:10px 0}
+.pg{width:210mm;height:296mm;padding:9mm 13mm 8mm;background:#fff;color:#000;position:relative;overflow:hidden;margin:0 auto 12px;box-shadow:0 2px 12px rgba(0,0,0,.35);font-family:'Sarabun','TH Sarabun New',Tahoma,sans-serif;font-size:10.5pt;line-height:1.38;display:flex;flex-direction:column}
+.pg.land{width:296mm;height:209mm;page:land}
+.pb{flex:1;min-height:0;overflow:hidden}
+.pb>.fit{transform-origin:top left;display:flow-root}
+.t1{font-size:9.6pt}.t1 td{padding:.7mm 1.5mm!important}
+.inst{font-size:9.6pt;line-height:1.3}
+@page{size:A4 portrait;margin:0}
+@page land{size:A4 landscape;margin:0}
+@media print{
+ html,body{background:#fff!important}
+ header#top,#app,#bnav,.pvbar,#toast{display:none!important}
+ #printRoot{display:block!important;background:#fff;min-height:0}
+ .pages{padding:0}
+ .pg{margin:0!important;box-shadow:none!important;zoom:1!important;break-after:page;page-break-after:always}
+ .pg:last-child{break-after:auto;page-break-after:auto}
+}
+.ph{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px dashed #444;padding-bottom:2mm;margin-bottom:2.5mm;gap:6mm}
+.phl{display:flex;align-items:center;gap:2.5mm;line-height:1.1}
+.phl img{height:12mm;width:auto}
+.phl b{font-size:10pt;display:block}.phl big{font-size:15pt;font-weight:600;display:block;letter-spacing:.3px}
+.phr{text-align:right;font-size:8pt;line-height:1.3}.phr b{font-size:10.5pt}
+.pf{display:flex;justify-content:space-between;border-top:1px dashed #444;padding-top:1.5mm;font-size:9pt;margin-top:2mm}
+.val{color:#1a3a9c;font-weight:600}
+.ck{display:inline-block;width:3.6mm;height:3.6mm;border:1px solid #000;vertical-align:-.6mm;margin-right:1.5mm;text-align:center;line-height:3.2mm;font-size:9pt;color:#1a3a9c;font-weight:700}
+table.ft{width:100%;border-collapse:collapse;margin-bottom:2.5mm}
+table.ft td,table.ft th{border:1px solid #000;padding:1.2mm 1.8mm;vertical-align:middle}
+table.ft th{background:#d0d0d0;font-weight:700;text-align:center;line-height:1.2}
+table.ft.sm{font-size:9pt}table.ft.sm td,table.ft.sm th{padding:.6mm 1.2mm}
+table.ft td.c,.c{text-align:center}
+td.top{vertical-align:top!important;text-align:center}
+.st{font-weight:700;margin:1.5mm 0 1.5mm}
+.bl{margin:0 0 1.5mm 6mm}
+.dl{display:inline-block;min-width:22mm;border-bottom:1px dotted #000;text-align:center;padding:0 1mm}
+.p1top{display:flex;border:1px solid #000;margin-bottom:2mm}
+.ttl{flex:1;background:#d9d9d9;text-align:center;font-size:15pt;padding:3mm;border-right:1px solid #000}
+.ttlb{font-size:23pt;font-weight:700}
+.dbox{width:44mm;text-align:center;font-size:10pt;display:flex;flex-direction:column}
+.dbox .dl1{padding:1.5mm;flex:1}
+.d3{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid #000}
+.d3 span{border-left:1px solid #000;padding:1mm;min-height:6mm}.d3 span:first-child{border-left:0}
+.inst ol{margin:1mm 0 1mm;padding-left:6mm}
+.parts{padding-left:4mm}
+hr.sep{border:0;border-top:1.5px solid #000;margin:2mm 0}
+.cg2{display:grid;grid-template-columns:1fr 1fr;gap:.5mm 4mm}
+.laybox{position:relative;height:88mm;border:1px solid #000;margin-bottom:2mm}
+.laybox .li{font-size:10pt;cursor:default;background:none}
+.bdg{display:inline-flex;width:13mm;height:13mm;border:1.5px solid #000;border-radius:50%;align-items:center;justify-content:center;font-weight:700;font-size:7.5pt;text-align:center;line-height:1.05}
+.flowbox{border:1px solid #000;height:150mm;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2mm;margin:2mm 0 3mm}
+.fb{background:#d0d0d0;text-align:center;padding:2.5mm 6mm;min-width:105mm;font-size:10.5pt}
+.fb.head{font-weight:700;font-size:12pt;min-width:72mm;padding:4mm 6mm}
+.frow{display:flex;align-items:center;gap:4mm}
+.frow .ck{width:6mm;height:6mm;line-height:5.5mm;font-size:13pt;border-width:1.5px}
+.arr{width:0;height:0;border-left:3mm solid transparent;border-right:3mm solid transparent;border-top:4mm solid #222;position:relative;margin-top:3mm}
+.arr:before{content:'';position:absolute;left:-1mm;top:-7mm;width:2mm;height:3.2mm;background:#222}
+.fnote{max-width:150mm;text-align:center;margin-top:2mm}
+.sig{width:95mm;margin-left:auto;line-height:2}
+.cert{padding:16mm 20mm}
+.certlogos{display:flex;justify-content:center;align-items:center;gap:12mm;margin-bottom:6mm}
+.certlogos img{height:16mm}
+.certlogos .t{font-size:10pt;line-height:1.15}.certlogos .t big{font-size:14pt;display:block}
+.cert h2{text-align:center;font-size:17pt;margin:2mm 0}
+.cert .lines p{margin:0 0 5mm;font-size:12pt;display:flex;gap:2mm;align-items:flex-end}
+.cert .lines .dl{flex:1;text-align:left}
+.cert .thick{border-top:2.5px solid #000;margin:5mm 0 8mm}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,1fr);gap:4mm;flex:1;min-height:0}
+.pgrid figure{margin:0;display:flex;flex-direction:column;min-height:0}
+.pim{flex:1;min-height:0;border:1px solid #999;display:flex;align-items:center;justify-content:center;background:#fafafa;overflow:hidden}
+.pim img{max-width:100%;max-height:100%;object-fit:contain}
+.pgrid figcaption{font-size:9.5pt;padding-top:1mm}
+.phd{display:flex;justify-content:space-between;border-bottom:1px dashed #444;padding-bottom:2mm;margin-bottom:3mm}
+</style>
+</head>
+<body>
+<header id="top"><h1 id="ttl">แบบสำรวจผลิตภัณฑ์ลดใช้พลังงาน</h1><span id="saved"></span><span id="hb"></span></header>
+<main id="app"></main>
+<div id="bnav" hidden><button class="btn" id="bprev">◀ ก่อนหน้า</button><span id="bmid"></span><button class="btn pri" id="bnext">ถัดไป ▶</button></div>
+<div id="printRoot"></div>
+<div id="toast"></div>
+<script>
+'use strict';
+/* ========== utils ========== */
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const num=x=>{const n=parseFloat(String(x??'').replace(/,/g,''));return isFinite(n)?n:0};
+const has=x=>x!==undefined&&x!==null&&x!==false&&String(x).trim()!=='';
+const sum=a=>a.reduce((s,x)=>s+(+x||0),0);
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const clone=o=>JSON.parse(JSON.stringify(o));
+function fmt(n,dp=2){if(n===null||n===undefined||typeof n!=='number'||!isFinite(n))return '-';if(n===0)return '0';return Number(n.toFixed(dp)).toLocaleString('th-TH',{maximumFractionDigits:dp})}
+function getP(o,p){return p.split('.').reduce((a,k)=>a==null?undefined:a[k],o)}
+function setP(o,p,val){const ks=p.split('.');let a=o;for(let i=0;i<ks.length-1;i++){const k=ks[i];if(a[k]==null)a[k]=/^\d+$/.test(ks[i+1])?[]:{};a=a[k]}a[ks[ks.length-1]]=val}
+const TM=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+function thDate3(iso){if(!has(iso))return['','',''];const [y,m,d]=iso.split('-').map(Number);if(!y)return['','',''];return[String(d),TM[m-1]||'',String((y+543)%100).padStart(2,'0')]}
+function thDate(iso){const a=thDate3(iso);return a[0]?a.join(' '):''}
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2200)}
+
+/* ========== storage ========== */
+const DB={db:null,mode:'idb',mem:{shops:{},kv:{}},
+ async init(){
+  try{this.db=await new Promise((res,rej)=>{const r=indexedDB.open('tongmuan-survey',1);r.onupgradeneeded=()=>{const db=r.result;db.createObjectStore('shops',{keyPath:'id'});db.createObjectStore('kv')};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});this.mode='idb'}
+  catch(e){try{localStorage.setItem('_t','1');localStorage.removeItem('_t');this.mode='ls';const s=JSON.parse(localStorage.getItem('tm_db')||'null');if(s)this.mem=s}catch(e2){this.mode='mem'}}
+ },
+ tx(st,m,fn){return new Promise((res,rej)=>{const t=this.db.transaction(st,m);const r=fn(t.objectStore(st));t.oncomplete=()=>res(r&&r.result);t.onerror=()=>rej(t.error);t.onabort=()=>rej(t.error)})},
+ lsSave(){if(this.mode==='ls'){try{localStorage.setItem('tm_db',JSON.stringify(this.mem))}catch(e){toast('⚠️ พื้นที่เก็บเต็ม — กรุณาสำรองไฟล์ JSON')}}},
+ async all(){if(this.mode==='idb')return this.tx('shops','readonly',s=>s.getAll());return Object.values(this.mem.shops)},
+ async put(o){if(this.mode==='idb')return this.tx('shops','readwrite',s=>s.put(o));this.mem.shops[o.id]=o;this.lsSave()},
+ async del(id){if(this.mode==='idb')return this.tx('shops','readwrite',s=>s.delete(id));delete this.mem.shops[id];this.lsSave()},
+ async get(k){if(this.mode==='idb')return this.tx('kv','readonly',s=>s.get(k));return this.mem.kv[k]},
+ async set(k,v){if(this.mode==='idb')return this.tx('kv','readwrite',s=>s.put(v,k));this.mem.kv[k]=v;this.lsSave()}
+};
+
+/* ========== schema ========== */
+const TB={
+ raw32:{rows:[{n:'แป้ง',spec:1},{n:'กะทิ'},{n:'มะพร้าว'},{n:'น้ำตาล'},{n:'ไข่'},{n:'อื่นๆ ระบุ',spec:1}],cols:[{k:'q',l:'จำนวน',num:1},{k:'u',l:'หน่วย',ph:'กก.'},{k:'note',l:'หมายเหตุ'}]},
+ tech331:{rows:[{n:'เครื่องตีแป้ง'},{n:'เครื่องคั้นกะทิ'},{free:1}],cols:[{k:'cnt',l:'จำนวน',unit:'เครื่อง',num:1},{k:'kw',l:'กำลังไฟฟ้า',unit:'kW',num:1},{k:'cap',l:'ความจุ',unit:'ลิตร',num:1},{k:'rate',l:'อัตราการทำงาน',unit:'กก./ชม.'}]},
+ raw332:{rows:[{n:'แป้ง',spec:1},{n:'กะทิ'},{n:'น้ำตาล'},{n:'ไข่'},{n:'อื่นๆ ระบุ',spec:1},{n:'มะพร้าว'},{free:1},{free:1}],cols:[{k:'q',l:'ปริมาณ',num:1},{k:'u',l:'หน่วย',ph:'กก.'}]},
+ stove341:{rows:[{n:'เตามณฑล'},{n:'เตาเศรษฐกิจ'},{n:'เตาอั้งโล่'},{n:'เตาก๊าซหุงต้ม (LPG)'},{n:'เตาไฟฟ้า'},{n:'อื่นๆ ระบุ',spec:1}],cols:[{k:'sc',l:'เตา: จำนวน',unit:'เตา',num:1},{k:'ss',l:'เตา: ขนาด ก×ย×ส',unit:'ม.'},{k:'pt',l:'ภาชนะ: ชนิด'},{k:'pc',l:'ภาชนะ: จำนวน',unit:'ใบ',num:1},{k:'ps',l:'ภาชนะ: ขนาด ก×ย×ส',unit:'ม.'},{k:'pv',l:'ภาชนะ: ความจุ',unit:'ลิตร',num:1},{k:'mc',l:'เครื่องจักร: จำนวน',unit:'เครื่อง',num:1},{k:'mkw',l:'เครื่องจักร: กำลังไฟ',unit:'kW',num:1},{k:'mv',l:'เครื่องจักร: ความจุ',unit:'ลิตร',num:1},{k:'mr',l:'อัตราการทำงาน',unit:'กก./ชม.'}]},
+ r342:{rows:[{n:'แป้งขนมทองม้วน'},{free:1},{free:1},{free:1},{free:1}],cols:[{k:'q',l:'ปริมาณวัตถุดิบ',num:1},{k:'u',l:'หน่วย',ph:'กก.'},{k:'dur',l:'ระยะเวลา',num:1},{k:'du',l:'หน่วยเวลา',opts:['นาที','วินาที','ชม.']},{k:'h',l:'คิดเป็น ชม.',calc:1},{k:'bt',l:'ชีวมวล: ประเภท'},{k:'bkg',l:'ชีวมวล',unit:'กก./รอบ',num:1},{k:'lpg',l:'ก๊าซ LPG',unit:'กก./รอบ',num:1},{k:'kw',l:'อุปกรณ์ไฟฟ้า',unit:'kW',num:1},{k:'kwh',l:'kWh/รอบ',calc:1}]},
+ m35:{rows:[{n:'เครื่องบรรจุ'},{n:'เครื่องซีล'},{free:1}],cols:[{k:'fn',l:'หน้าที่หลัก'},{k:'kw',l:'ขนาดกำลังไฟฟ้า',unit:'kW',num:1},{k:'h',l:'ระยะเวลาใช้งาน',unit:'ชม./รอบ',num:1},{k:'kwh',l:'kWh/รอบ',calc:1}]},
+ bio41:{rows:[{n:'ไม้ฟืน'},{n:'ถ่านไม้'},{n:'อื่นๆ (ระบุ)',spec:1}],cols:[{k:'kg',l:'ปริมาณที่ใช้',unit:'กก./รอบ',num:1},{k:'price',l:'ราคาต่อหน่วย',unit:'บาท/กก.',num:1},{k:'src',l:'แหล่งที่มา (สถานที่)'}]},
+ lpg42:{rows:[{n:'ก๊าซ LPG ขนาด 15 กก.'},{n:'ก๊าซ LPG ขนาด 48 กก.'},{n:'อื่นๆ (ระบุ ขนาดถัง กก.)',spec:1}],cols:[{k:'kg',l:'ปริมาณที่ใช้',unit:'กก./รอบ',num:1},{k:'price',l:'ราคา LPG',unit:'บาท/ถัง',num:1},{k:'cost',l:'คิดเป็น บาท/รอบ',calc:1}]},
+ el43:{rows:[{n:'กฟภ./กฟน.'},{n:'โซล่าเซลล์'},{n:'อื่นๆ (ระบุ)',spec:1}],cols:[{k:'unit',l:'ใช้ไฟเฉลี่ย',unit:'หน่วย/เดือน',num:1},{k:'baht',l:'ค่าไฟเฉลี่ย',unit:'บาท/เดือน',num:1}]},
+ waste5:{rows:[{n:'เศษขนมทองม้วน'},{n:'กากมะพร้าว'},{n:'น้ำเสีย'},{free:1}],cols:[{k:'w',l:'ของเสีย',unit:'กก.',num:1},{k:'fin',l:'ผลิตภัณฑ์สุดท้ายที่ได้',unit:'กก.',num:1},{k:'use',l:'ใช้ประโยชน์',opts:['','มี','ไม่มี']},{k:'det',l:'ระบุการใช้ประโยชน์'}]}
+};
+const STD=[{n:'มาตรฐานผลิตภัณฑ์ชุมชน (มผช.)',b:'มผช.'},{n:'องค์การอาหารและยา (อย.)',b:'อย.'},{n:'มาตรฐานโอทอป (OTOP)',b:'OTOP',stars:1},{n:'Good Manufacturing Practice (Primary GMP / GMP)',b:'GMP'},{n:'มาตรฐานอาหารฮาลาล (Halal Food)',b:'ฮาลาล'},{n:'มาตรฐานสินค้าเกษตร (Q-mark)',b:'Q'},{n:'อื่นๆ (โปรดระบุ)',b:'อื่นๆ',other:1}];
+const PH=[{k:'sign',n:'ป้ายสถานประกอบการ',m:1},{k:'talk',n:'พูดคุยสอบถามข้อมูล',m:1},{k:'prod',n:'ผลิตภัณฑ์ (ถ้ามี)',m:1,opt:1},{k:'equip',n:'อุปกรณ์ในกระบวนการผลิตและการสำรวจข้อมูล',m:2},{k:'proc',n:'กระบวนการผลิตในแต่ละขั้นตอน',m:1},{k:'cert',n:'ใบรับรองมาตรฐาน (ถ้ามี)',m:1,opt:1}];
+
+/* ========== ประเภทผลิตภัณฑ์ ==========
+ วิธีเพิ่มประเภทใหม่ (เช่น กล้วยตาก):
+  1) คัดลอกบล็อก PT.lp แล้วเปลี่ยนรหัส (เช่น kt) ชื่อ ไอคอน หน่วยขาย (bag)
+  2) flow = 3 ขั้นตอนในหน้า 4 · std = แถวมาตรฐานในหน้า 3 · L = ข้อความที่ต่างกัน
+  3) tb = ตารางที่ต่างจากตารางกลาง (TB) — ใส่เฉพาะตารางที่เปลี่ยน
+  4) step6 = หน้าจอกรอกข้อ 3.4 · pages = ลำดับหน้าพิมพ์ (ใช้ซ้ำของเดิมได้)
+  5) เพิ่ม sampleXX() ถ้าต้องการข้อมูลตัวอย่าง */
+const STD_SHORT=[STD[0],STD[1],STD[2],STD[6]];
+const PT={
+ tm:{name:'ขนมทองม้วน',icon:'🍪',bag:'ถุง',std:STD,
+  flow:[{k:'p_prep',t:'เตรียมวัตถุดิบ (กรอกข้อมูลข้อ 3.3)',s:'ผสม, ปั่น, คั้น'},{k:'p_bake',t:'การปิ้งขนมทองม้วน (กรอกข้อมูลข้อ 3.4)',s:'เตาอั้งโล่, เตาก๊าซหุงต้ม, เตาไฟฟ้า'},{k:'p_pack',t:'การบรรจุภัณฑ์ (กรอกข้อมูลข้อ 3.5)',s:'เครื่องบรรจุ, เครื่องซีล'}],
+  L:{s31:'ปริมาณขนมทองม้วนที่ผลิตได้',p332out:'ปริมาณที่ได้หลังสิ้นสุดกระบวนการ',p35in:'ปริมาณขนมทองม้วนที่ใช้',p35out:'ปริมาณขนมทองม้วนที่ได้',step6:['🔥','ปิ้งขนมทองม้วน','ข้อ 3.4'],
+   wasteEx:'<b>เศษขนมทองม้วน:</b> ส่วนประกอบอาหารสัตว์/บดทำเป็นฐานเค้ก/แจกคนในชุมชน, <b>กากมะพร้าว:</b> อาหารสัตว์/ทำปุ๋ยหมัก, <b>น้ำเสีย:</b> รดน้ำต้นไม้/บำบัดเพื่อผลิตก๊าซชีวภาพ'},
+  tb:{},step6:()=>st7(),pages:()=>[pg1,pg2,pg3,pg4,pg5,pg6,pg7,pg8,pg9]},
+ lp:{name:'ลูกประคบ',icon:'🌿',bag:'ลูก',std:STD_SHORT,
+  flow:[{k:'p_prep',t:'เตรียมวัตถุดิบ (กรอกข้อมูลข้อ 3.3)',s:'เครื่องหั่น'},{k:'p_bake',t:'การตากแห้งสมุนไพร (กรอกข้อมูลข้อ 3.4)',s:'โรงอบแห้งพลังงานแสงอาทิตย์ เตาอบไฟฟ้า'},{k:'p_pack',t:'การบรรจุภัณฑ์ (กรอกข้อมูลข้อ 3.5)',s:'เครื่องบรรจุ, เครื่องซีล'}],
+  L:{s31:'ปริมาณลูกประคบที่ผลิตได้',p332out:'ปริมาณที่ได้ทั้งหมดหลังสิ้นสุดกระบวนการ',p35in:'ปริมาณสมุนไพรจากกระบวนการตากแห้งที่ใช้',p35out:'ปริมาณผลิตภัณฑ์ที่ได้หลังบรรจุ',step6:['☀️','ตากแห้งสมุนไพร','ข้อ 3.4.1–3.4.3'],
+   wasteEx:'<b>เศษสมุนไพร:</b> หมักทำปุ๋ย/อาหารสัตว์, <b>เศษผ้า:</b> ยัดไส้เบาะหรือหมอน/รีไซเคิลเป็นเส้นใยใหม่, <b>น้ำเสีย:</b> รดน้ำต้นไม้/บำบัดเพื่อผลิตก๊าซชีวภาพ'},
+  tb:{
+   raw32:{rows:[{n:'สมุนไพร',spec:1},{n:'สมุนไพร',spec:1},{n:'สมุนไพร',spec:1},{n:'เกลือ'},{n:'การบูร'},{free:1}],cols:TB.raw32.cols},
+   tech331:{rows:[{n:'เครื่องหั่น'},{free:1}],cols:TB.tech331.cols},
+   raw332:{rows:[{n:'สมุนไพร ระบุ',spec:1},{n:'สมุนไพร ระบุ',spec:1},{n:'สมุนไพร ระบุ',spec:1},{free:1}],cols:TB.raw332.cols},
+   waste5:{rows:[{n:'เศษสมุนไพร',spec:1},{n:'เศษผ้า'},{n:'น้ำเสีย'},{free:1}],cols:TB.waste5.cols},
+   dry341:{rows:[{n:'โรงอบแห้งแสงอาทิตย์แบบ พพ.1',pre:{w:'6',l:'8.2'}},{n:'โรงอบแห้งแสงอาทิตย์แบบ พพ.2',pre:{w:'8',l:'12.4'}},{n:'โรงอบแห้งแสงอาทิตย์แบบ พพ.3',pre:{w:'8',l:'20.8'}},{n:'โรงอบแห้งแสงอาทิตย์แบบ 3 x 4 เมตร',pre:{w:'3',l:'4'}},{n:'โรงอบแห้งพลังงานแสงอาทิตย์แบบเคลื่อนที่ได้ (ระบุ)',spec:1},{n:'ตู้อบไฟฟ้า',spec:1,suf:' kW'},{n:'อื่นๆ (ระบุ)',spec:1}],
+    cols:[{k:'w',l:'กว้าง',unit:'ม.',num:1},{k:'l',l:'ยาว',unit:'ม.',num:1},{k:'cnt',l:'จำนวน',unit:'หลัง',num:1},{k:'age',l:'อายุใช้งาน',unit:'เดือน',num:1}]},
+   tray342:{rows:[{n:'ถาดโลหะหรือตะแกรง (อลูมิเนียม/เหล็ก/ตาข่ายลวด เป็นต้น)',spec:1},{n:'ไม้ไผ่สาน'},{n:'กระด้ง (ระบุเส้นผ่าศูนย์กลาง)',spec:1},{n:'อื่นๆ (ระบุ)',spec:1},{free:1}],
+    cols:[{k:'w',l:'กว้าง',unit:'ม.',num:1},{k:'l',l:'ยาว',unit:'ม.',num:1},{k:'area',l:'พื้นที่ (ตร.ม.)',calc:1},{k:'cnt',l:'อันต่อรอบ',unit:'อัน',num:1},{k:'tarea',l:'พื้นที่รวม (ตร.ม.)',calc:1},{k:'age',l:'อายุใช้งาน',unit:'เดือน',num:1}]},
+   dry343:{rows:[{n:'สมุนไพร ระบุ',spec:1},{n:'สมุนไพร ระบุ',spec:1},{n:'สมุนไพร ระบุ',spec:1},{n:'สมุนไพร ระบุ',spec:1},{free:1},{free:1},{free:1},{free:1}],
+    cols:[{k:'wb',l:'นน.ก่อนตากแห้ง',unit:'กก./รอบ',num:1},{k:'area',l:'พื้นที่ตากแห้งจริง',unit:'ตร.ม.',num:1},{k:'hd',l:'ระยะเวลา',unit:'ชม./วัน',num:1},{k:'days',l:'จำนวนวัน',unit:'วัน',num:1},{k:'wa',l:'นน.หลังตากแห้ง',unit:'กก./รอบ',num:1},{k:'temp',l:'อุณหภูมิ',unit:'°C',num:1},{k:'hum',l:'ความชื้น',unit:'%',num:1},{k:'heat',l:'ความร้อนเสริม',unit:'กก./รอบ',num:1},{k:'kw',l:'ไฟฟ้า',unit:'kW',num:1},{k:'kwh',l:'kWh/รอบ',calc:1}]}
+  },step6:()=>stLP7(),pages:()=>[pg1,pg2,pg3,pg4,pg5,lp6,lp7,lp8,lp9,lp10]}
+};
+const PTY=d=>PT[(d&&d.ptype)||'tm']||PT.tm;
+const T=d=>Object.assign({},TB,PTY(d).tb);
+
+function blank(pt='tm'){const P=PT[pt]||PT.tm,TT=T({ptype:pt});const t={sizes:[{u:'g'},{u:'g'},{u:'g'}],std:P.std.map(()=>({}))};for(const k in TT)t[k]=TT[k].rows.map(()=>({}));
+ return{id:uid(),ptype:pt,created:Date.now(),updated:Date.now(),f:{product:P.name,p332du:'นาที'},t,layout:[],photos:{}}}
+function norm(d){d.ptype=d.ptype||'tm';const b=blank(d.ptype);d.f=Object.assign({},b.f,d.f||{});d.t=d.t||{};for(const k in b.t){if(!Array.isArray(d.t[k]))d.t[k]=b.t[k];while(d.t[k].length<b.t[k].length)d.t[k].push(clone(b.t[k][d.t[k].length]))}d.layout=d.layout||[];d.photos=d.photos||{};return d}
+
+function sample(){const d=blank();Object.assign(d.f,{
+ date:'2026-11-05',title:'นาง',name:'สอิ้ง เกตุแก้ว',type:'วิสาหกิจชุมชน',members:'9',shop:'ทองม้วนข้าวกล้อง',product:'ขนมทองม้วน',
+ house:'45',moo:'8',village:'ท่าจำปี',tambon:'ทุ่งสะโตก',amphoe:'สันป่าตอง',province:'เชียงใหม่',zip:'50120',phone:'0623095309',
+ lat:'18.563943',lng:'98.847276',period:'ตลอดปี',reg:'เป็นประจำ',daysMonth:'12',monthsYear:'12',kgYear:'5880',kgMonth:'490',kgRound:'41',kgDay:'41',note1:'นน. 135 g/ถุง',
+ ch1:'หน้าร้าน',ch2:'ออนไลน์',c12_sell:true,c12_cons:true,creditOther:'ชำระทันที',c14_none:true,label:'มี',l15_name:true,l15_date:true,l15_reg:true,l15_ing:true,ready:'มีความพร้อม',
+ otopStars:'4',p_prep:true,p_bake:true,p_pack:true,s31:'13.5',s31note:'100 ถุง / 135 g',noteRaw:'= ได้ 50 ถุง',
+ p332dur:'10',p332du:'นาที',p332dev:'เครื่องตีแป้ง',p332kw:'1.2',p332yield:'18.25',p332yu:'กก.',bioNone:true,
+ recTitle:'นางสาว',recName:'ศิริวิมล ณ มูล',recPhone:'0622313759',
+ reviewNote:'ตรวจซ้ำจากลายมือ: (1) ชื่อผู้ให้ข้อมูล และเบอร์ผู้บันทึก (2) ข้อ 1.9 เขียน 135 ในช่อง กก./ถุง → ใส่เป็น 135 กรัม (3) ข้อ 3.1 = 100 ถุง × 135 g = 13.5 กก./รอบ ไม่ตรงกับ 1.8.1 = 41 กก./รอบ (4) งาดำ 0.25 g หรือ 0.25 กก.? (5) การใช้ประโยชน์เศษขนม คำที่ 3 อ่านไม่ชัด (6) ข้อ 3.4.2 ยังว่าง'});
+ Object.assign(d.t.sizes[0],{w:'135',u:'g',q:'1000',p:'35'});
+ Object.assign(d.t.std[0],{on:true,no:'มผช. 1/2562'});Object.assign(d.t.std[1],{on:true,no:'50-2-05248-2-0001'});Object.assign(d.t.std[2],{on:true});
+ const r=[{x:'มันสำปะหลัง',q:'6',u:'กก.'},{q:'3',u:'กก.'},{q:'-',u:'กก.'},{q:'3',u:'กก.'},{q:'6',u:'ฟอง'},{x:'งาดำ',q:'0.25',u:'g'}];d.t.raw32=r;
+ d.t.raw332=[{x:'มันสำปะหลัง',q:'6',u:'กก.'},{q:'3',u:'กก.'},{q:'3',u:'กก.'},{q:'6',u:'ฟอง'},{x:'งาดำ',q:'0.25',u:'g'},{},{},{}];
+ Object.assign(d.t.tech331[0],{cnt:'1',kw:'1.2',cap:'10',rate:'10 นาที'});
+ Object.assign(d.t.stove341[3],{sc:'6',pt:'พิมพ์ขนมทองม้วน',pc:'6'});
+ Object.assign(d.t.m35[1],{fn:'ปิดปากถุง',kw:'0.2',h:'0.5'});
+ Object.assign(d.t.lpg42[0],{kg:'5',price:'490'});Object.assign(d.t.el43[0],{unit:'16',baht:'67.2'});
+ Object.assign(d.t.waste5[0],{w:'2',use:'มี',det:'อาหารปลา, อาหารไก่, (คำที่ 3 อ่านไม่ชัด)'});d.t.waste5[1].use='ไม่มี';d.t.waste5[2].use='ไม่มี';
+ d.layout=[{shape:'rect',label:'บรรจุทองม้วน',x:7,y:12,w:20,h:32},{shape:'circle',label:'ผสมแป้งทองม้วน',x:70,y:8,w:18,h:42},{shape:'rect',label:'เครื่องปิ้งขนมทองม้วน',x:38,y:58,w:25,h:30}];
+ return d}
+
+function sampleLP(){const d=blank('lp');Object.assign(d.f,{
+ date:'2026-11-04',title:'นาง',name:'บานเย็น แสงเมือง',type:'วิสาหกิจชุมชน',members:'12',shop:'ศูนย์เรียนรู้สมุนไพรและการแพทย์พื้นบ้านชุมชนบ้านขี้เหล็กหลวง',product:'ลูกประคบสมุนไพร',
+ house:'221/9',moo:'6',village:'ขี้เหล็กหลวง',tambon:'ขี้เหล็ก',amphoe:'แม่ริม',province:'เชียงใหม่',zip:'50180',phone:'0987482565',
+ lat:'19.038108',lng:'98.943490',period:'บางช่วงเวลา',periodMonths:'ต.ค. – ธ.ค.',reg:'ตามออเดอร์',daysMonth:'3',monthsYear:'3',kgYear:'90',kgMonth:'7.5',kgRound:'2.5',kgDay:'2.5',
+ ch1:'หน้าร้าน',shelf:'2',shelfU:'ปี',storage:'อุณหภูมิห้อง',c12_sell:true,creditOther:'ชำระทันที',label:'มี',l15_name:true,ready:'มีความพร้อม',
+ p_bake:true,p_pack:true,s31:'2.5',noteRaw:'ใบส้มป่อย 2 ขีด',prepNone:true,
+ p343in:'5',p343out:'2.5',p35in:'2.5',p35out:'2.5',bioNone:true,lpgNone:true,wasteNone:true,
+ recTitle:'นางสาว',recName:'ศิริวิมล ณ มูล',recPhone:'0622313759',
+ reviewNote:'ตรวจซ้ำจากลายมือ: (1) นามสกุลผู้ให้ข้อมูล (แสงเมือง/หลงเมือง) และเบอร์ผู้บันทึก (2) ข้อ 1.9 เขียน 250 ในช่อง กก./ลูก → ใส่เป็น 250 กรัม (3) ข้อ 1.7 ต่อปี 90 กก. แต่ 7.5 กก./เดือน × 3 เดือน = 22.5 กก. (4) เกลือ/การบูร/ใบมะขาม เขียนเป็น "ขีด" → แปลงเป็น กก. (1 ขีด = 0.1 กก.) (5) ข้อ 3.4.2 อันต่อรอบ = 2 แต่พื้นที่รวมที่เขียน (2.9808 / 3.3856) คิดจาก ×4 (6) ข้อ 3.5 หนีบผม 17 W ใช้ 5 นาที → 0.017 kW, 0.083 ชม. (7) เดือนที่ผลิต ต.ค.–ธ.ค.?'});
+ Object.assign(d.t.sizes[0],{w:'250',u:'g',q:'10',p:'35'});
+ d.t.raw32=[{x:'ไพล',q:'2',u:'กก.'},{x:'ขมิ้น',q:'0.5',u:'กก.'},{x:'ผิวมะกรูด',q:'2',u:'กก.'},{q:'0.2',u:'กก.',note:'2 ขีด'},{q:'0.1',u:'กก.',note:'1 ขีด'},{n:'ใบมะขาม',q:'0.2',u:'กก.',note:'2 ขีด'}];
+ Object.assign(d.t.dry341[4],{x:'',w:'2',l:'2',cnt:'1',age:'18'});
+ d.t.tray342[0]={x:'อลูมิเนียม — ชั้นบน',w:'0.81',l:'0.92',cnt:'2',age:'18'};
+ d.t.tray342[4]={n:'ถาดอลูมิเนียม — ชั้นล่าง',w:'0.92',l:'0.92',cnt:'2',age:'18'};
+ const dr=(o)=>Object.assign({area:'6.366',days:'1',temp:'50',hum:'35'},o);
+ d.t.dry343=[dr({x:'ไพล',wb:'2',hd:'8',wa:'1'}),dr({x:'ขมิ้น',wb:'0.5',hd:'8',wa:'0.2'}),dr({x:'ผิวมะกรูด',wb:'2',hd:'8',wa:'1'}),dr({x:'ใบมะขาม',wb:'0.2',hd:'6',wa:'0.2'}),dr({n:'ใบส้มป่อย',wb:'0.2',hd:'6',wa:'0.2'}),{},{},{}];
+ d.t.m35[2]={n:'หนีบผมขนาดเล็ก',fn:'ซีลปากถุง',kw:'0.017',h:'0.083'};
+ Object.assign(d.t.el43[0],{unit:'5',baht:'21'});
+ d.layout=[{shape:'rect',label:'มัดลูกประคบ',x:25,y:22,w:17,h:28},{shape:'rect',label:'ตู้อบแห้งพลังงานแสงอาทิตย์',x:67,y:18,w:17,h:22},{shape:'rect',label:'บรรจุลูกประคบ',x:25,y:52,w:17,h:28}];
+ return d}
+
+/* ========== calc & checks ========== */
+const hrs=(x,u)=>{x=num(x);return u==='วินาที'?x/3600:u==='ชม.'?x:x/60};
+function calc(d){const f=d.f,t=d.t,c={};
+ c.estMonth=num(f.kgDay)*num(f.daysMonth);
+ c.estYear=(num(f.kgMonth)||c.estMonth)*num(f.monthsYear);
+ c.salesKg=sum(t.sizes.map(r=>num(r.w)*(r.u==='kg'?1:.001)*num(r.q)));
+ c.revenue=sum(t.sizes.map(r=>num(r.q)*num(r.p)));
+ c.p332h=hrs(f.p332dur,f.p332du);c.p332kwh=num(f.p332kw)*c.p332h;
+ c.r342=(t.r342||[]).map(r=>{const h=hrs(r.dur,r.du);return{h,kwh:num(r.kw)*h}});
+ c.m35=t.m35.map(r=>({kwh:num(r.kw)*num(r.h)}));
+ c.lpg42=t.lpg42.map((r,i)=>{const size=i===0?15:i===1?48:num(r.x);return{cost:size?num(r.kg)*num(r.price)/size:0}});
+ if(t.tray342){c.tray342=t.tray342.map(r=>{const a=num(r.w)*num(r.l);return{area:a,tarea:a*num(r.cnt)}});c.trayArea=sum(c.tray342.map(x=>x.tarea))}
+ c.dry343=(t.dry343||[]).map(r=>({kwh:num(r.kw)*num(r.hd)*(num(r.days)||1)}));
+ c.wb=sum((t.dry343||[]).map(r=>num(r.wb)));c.wa=sum((t.dry343||[]).map(r=>num(r.wa)));c.dryArea=Math.max(0,...(t.dry343||[]).map(r=>num(r.area)));
+ const heat=sum((t.dry343||[]).map(r=>num(r.heat)));
+ c.kwhRound=c.p332kwh+sum(c.r342.map(x=>x.kwh))+sum(c.dry343.map(x=>x.kwh))+sum(c.m35.map(x=>x.kwh));
+ c.lpg342=sum((t.r342||[]).map(r=>num(r.lpg)))+(f.heatType==='LPG'?heat:0);c.lpg42Sum=sum(t.lpg42.map(r=>num(r.kg)));
+ c.lpgRound=c.lpg342||c.lpg42Sum;
+ c.bioRound=(sum((t.r342||[]).map(r=>num(r.bkg)))+(f.heatType==='ชีวมวล'?heat:0))||sum(t.bio41.map(r=>num(r.kg)));
+ c.billUnits=num(t.el43[0].unit);c.billBaht=num(t.el43[0].baht);
+ c.unitPrice=c.billUnits?c.billBaht/c.billUnits:0;
+ c.prodRound=num(f.kgRound)||num(f.s31);
+ c.roundsDay=num(f.kgRound)>0&&num(f.kgDay)>0?num(f.kgDay)/num(f.kgRound):1;
+ c.roundsMonth=num(f.daysMonth)*c.roundsDay;
+ c.kwhMonthEst=c.kwhRound*c.roundsMonth;
+ c.lpgCostRound=sum(c.lpg42.map(x=>x.cost));
+ c.bioCostRound=sum(t.bio41.map(r=>num(r.kg)*num(r.price)));
+ c.elecCostRound=c.kwhRound*c.unitPrice;
+ c.costRound=c.lpgCostRound+c.bioCostRound+c.elecCostRound;
+ c.costKg=c.prodRound?c.costRound/c.prodRound:0;
+ c.kwhKg=c.prodRound?c.kwhRound/c.prodRound:0;c.lpgKg=c.prodRound?c.lpgRound/c.prodRound:0;
+ return c}
+function checks(d,c){const f=d.f,t=d.t,w=[],P=PTY(d),TT=T(d);const W=(lvl,step,msg)=>w.push({lvl,step,msg});
+ const req=[['date','วันที่สำรวจ',0],['name','ชื่อผู้ให้ข้อมูล (1.1)',0],['type','ประเภทสถานประกอบการ (1.2)',0],['shop','ชื่อสถานประกอบการ (1.3)',0],['house','บ้านเลขที่ (1.4)',0],['tambon','ตำบล (1.4)',0],['amphoe','อำเภอ (1.4)',0],['province','จังหวัด (1.4)',0],['phone','เบอร์โทรศัพท์ (1.4)',0],['lat','พิกัด GPS (1.5)',0],['daysMonth','วันที่ผลิตต่อเดือน (1.6)',0],['kgRound','ปริมาณผลิตต่อรอบ (1.8.1)',0],['recName','ชื่อผู้บันทึกข้อมูล',9]];
+ req.forEach(([k,l,s])=>{if(!has(f[k]))W('err',s,`ยังไม่กรอก ${l}`)});
+ const ph=String(f.phone||'').replace(/\D/g,'');if(ph&&!/^0\d{8,9}$/.test(ph))W('warn',0,`เบอร์โทร ${f.phone} ไม่ครบ 9–10 หลัก`);
+ if(has(f.lat)&&has(f.lng)){const la=num(f.lat),lo=num(f.lng);if(la<5.5||la>20.6||lo<97.3||lo>105.7)W('warn',0,'พิกัด GPS อยู่นอกประเทศไทย — อาจสลับละติจูด/ลองติจูด')}
+ if(num(f.kgMonth)&&num(f.kgYear)&&num(f.monthsYear)){const e=num(f.kgMonth)*num(f.monthsYear);if(Math.abs(e-num(f.kgYear))/num(f.kgYear)>.1)W('warn',0,`1.7 ต่อปี ${fmt(num(f.kgYear))} กก. ≠ ต่อเดือน × เดือน/ปี (${fmt(e)} กก.)`)}
+ if(c.estMonth&&num(f.kgMonth)&&Math.abs(c.estMonth-num(f.kgMonth))/num(f.kgMonth)>.15)W('warn',0,`1.7 ต่อเดือน ${fmt(num(f.kgMonth))} กก. ≠ 1.8.2 ต่อวัน × วัน/เดือน (${fmt(c.estMonth)} กก.)`);
+ t.sizes.forEach((r,i)=>{if(r.u==='kg'&&num(r.w)>5)W('warn',1,`1.9 แถว ${i+1}: น้ำหนัก ${r.w} กก./${P.bag} สูงผิดปกติ — น่าจะเป็นกรัม`)});
+ if(c.salesKg&&num(f.kgMonth)){const ra=c.salesKg/num(f.kgMonth);if(ra<.7||ra>1.3)W('warn',1,`ยอดจำหน่าย/เดือน (1.9) = ${fmt(c.salesKg)} กก. ไม่สอดคล้องกับผลิต/เดือน (1.7) = ${fmt(num(f.kgMonth))} กก.`)}
+ if(num(f.s31)&&num(f.kgRound)&&Math.abs(num(f.s31)-num(f.kgRound))/num(f.kgRound)>.15)W('warn',4,`3.1 = ${fmt(num(f.s31))} กก./รอบ ไม่ตรงกับ 1.8.1 = ${fmt(num(f.kgRound))} กก./รอบ`);
+ t.tech331.forEach((r,i)=>{if(has(r.rate)&&!/^[\d.,\s]+$/.test(r.rate))W('info',5,`3.3.1 ${(TT.tech331.rows[i]||{}).n||r.n||''}: อัตราการทำงาน "${r.rate}" ควรเป็นหน่วย กก./ชม.`)});
+ if(d.ptype!=='lp'&&f.p_bake&&!t.r342.some(r=>has(r.q)||has(r.dur)||has(r.lpg)))W('warn',6,'ยังไม่กรอกตาราง 3.4.2 (ปริมาณ/เวลา/LPG ในการปิ้ง)');
+ if(d.ptype==='lp'){
+  if(f.p_bake&&!t.dry343.some(r=>has(r.wb)))W('warn',6,'ยังไม่กรอกตาราง 3.4.3 (การตากแห้ง)');
+  t.dry343.forEach((r,i)=>{if(num(r.wb)&&num(r.wa)>num(r.wb))W('warn',6,`3.4.3 แถว ${i+1}: น้ำหนักหลังตากแห้งมากกว่าก่อนตาก`)});
+  if(c.trayArea&&c.dryArea&&Math.abs(c.trayArea-c.dryArea)/c.dryArea>.1)W('warn',6,`พื้นที่ภาชนะรวม (3.4.2) = ${fmt(c.trayArea,3)} ตร.ม. ไม่ตรงกับพื้นที่ตากแห้งจริง (3.4.3) = ${fmt(c.dryArea,3)} ตร.ม.`);
+  if(num(f.p343out)&&c.wa&&Math.abs(c.wa-num(f.p343out))/num(f.p343out)>.15)W('info',6,`ผลรวมน้ำหนักหลังตาก ${fmt(c.wa)} กก. ≠ ปริมาณสมุนไพรแห้งที่ได้ ${fmt(num(f.p343out))} กก./รอบ`);
+ }
+ if(c.lpg342&&c.lpg42Sum&&Math.abs(c.lpg342-c.lpg42Sum)/c.lpg42Sum>.1)W('warn',8,`LPG ในข้อ 3.4 (${fmt(c.lpg342)} กก.) ≠ ส่วนที่ 4.2 (${fmt(c.lpg42Sum)} กก./รอบ)`);
+ if(c.unitPrice&&(c.unitPrice<2.5||c.unitPrice>9))W('warn',8,`ค่าไฟเฉลี่ย ${fmt(c.unitPrice)} บาท/หน่วย ผิดปกติ — ตรวจหน่วย/บาท`);
+ if(c.billUnits&&c.kwhMonthEst>c.billUnits*1.2)W('warn',8,`ไฟฟ้าที่คำนวณจากเครื่องจักร ${fmt(c.kwhMonthEst)} หน่วย/เดือน มากกว่าบิล ${fmt(c.billUnits)} หน่วย`);
+ if(!f.p_prep&&!f.p_bake&&!f.p_pack)W('err',4,'ยังไม่เลือกขั้นตอนกระบวนการผลิต (หน้า 4)');
+ PH.forEach(p=>{const n=(d.photos[p.k]||[]).length;if(n<p.m)W(p.opt?'info':'err',10,`รูป "${p.n}" มี ${n}/${p.m} รูป`)});
+ return w}
+const PROG=['date','title','name','type','members','shop','house','moo','tambon','amphoe','province','zip','phone','lat','lng','period','reg','daysMonth','monthsYear','kgYear','kgMonth','kgRound','kgDay','ch1','label','ready','s31','recName'];
+function progress(d){let tot=PROG.length+5,ok=PROG.filter(k=>has(d.f[k])).length;const t=d.t;
+ if(t.sizes.some(r=>has(r.w)))ok++;if(t.raw32.some(r=>has(r.q)))ok++;if(t.el43.some(r=>has(r.unit)))ok++;if(t.lpg42.some(r=>has(r.kg))||t.bio41.some(r=>has(r.kg))||(d.f.bioNone&&d.f.lpgNone))ok++;if(d.layout.length)ok++;
+ PH.filter(p=>!p.opt).forEach(p=>{tot++;if((d.photos[p.k]||[]).length>=p.m)ok++});return Math.round(ok/tot*100)}
+
+/* ========== state ========== */
+let shops=[],cur=null,step=0,view='home',saveT=null,selItem=-1;
+let S={year:'2569',logo:'',logo2:'',partner:'มหาวิทยาลัยเชียงใหม่',recTitle:'',recName:'',recPhone:''};
+const app=$('#app');
+const getV=p=>p.startsWith('s.')?getP(S,p.slice(2)):getP(cur,p);
+
+/* ========== form helpers ========== */
+function F(p,label,o={}){const v=getV(p)??'';const typ=o.type==='num'?'text':(o.type||'text');const im=o.type==='num'?' inputmode="decimal"':o.type==='tel'?' inputmode="tel"':'';
+ return `<label class="fld ${o.cls||''}"><span>${label}</span><div class="ib">${o.area?`<textarea data-p="${p}" placeholder="${esc(o.ph||'')}">${esc(v)}</textarea>`:`<input type="${typ}"${im} data-p="${p}" value="${esc(v)}" placeholder="${esc(o.ph||'')}">`}${o.unit?`<em>${o.unit}</em>`:''}</div></label>`}
+function CB(p,label){return `<label class="cb"><input type="checkbox" data-p="${p}" ${getV(p)?'checked':''}><span>${label}</span></label>`}
+function RD(p,opts,label){const v=getV(p)??'';return `<div class="fld radio"><span>${label}</span><div class="seg">${opts.map(o=>`<label><input type="radio" name="${p}" data-p="${p}" value="${esc(o)}" ${v===o?'checked':''}><b>${o}</b></label>`).join('')}</div></div>`}
+function SEL(p,opts,label){const v=getV(p)??'';return `<label class="fld"><span>${label}</span><div class="ib"><select data-p="${p}">${opts.map(o=>{const [val,txt]=Array.isArray(o)?o:[o,o||'—'];return `<option value="${esc(val)}" ${v===val?'selected':''}>${esc(txt)}</option>`}).join('')}</select></div></label>`}
+const CALC=(k,l,u='')=>`<div class="calc"><span>${l}</span><b><span data-c="${k}">-</span> <small>${u}</small></b></div>`;
+const CARD=(n,title,body,sub)=>`<div class="card"><div class="sec">${n?`<span class="n">${n}</span>`:''}${title}</div>${sub?`<p class="sub">${sub}</p>`:''}${body}</div>`;
+function TBL(name){const S2=T(cur)[name];return `<div class="tbl">${cur.t[name].map((r,i)=>{const def=S2.rows[i]||{free:1};
+ const head=def.free?`<input data-p="t.${name}.${i}.n" value="${esc(r.n||'')}" placeholder="รายการเพิ่มเติม (ถ้ามี)">`:`<b>${def.n}</b>${def.spec?`<input data-p="t.${name}.${i}.x" value="${esc(r.x||'')}" placeholder="ระบุ${def.suf?' ('+def.suf.trim()+')':''}">`:''}`;
+ return `<div class="row"><div class="rh"><i>${i+1}</i>${head}</div><div class="rg">${S2.cols.map(col=>col.calc?`<div class="calc sm"><span>${col.l}</span><b data-c="${name}.${i}.${col.k}">-</b></div>`:col.opts?SEL(`t.${name}.${i}.${col.k}`,col.opts,col.l):F(`t.${name}.${i}.${col.k}`,col.l,{type:col.num?'num':'text',unit:col.unit,ph:(def.pre&&def.pre[col.k])||col.ph})).join('')}</div></div>`}).join('')}</div>`}
+function stepWarn(i){const ws=checks(cur,calc(cur)).filter(x=>x.step===i&&x.lvl!=='info');return ws.length?`<div class="card">${ws.map(x=>`<div class="warnbox ${x.lvl}">${x.lvl==='err'?'⛔':'⚠️'} <span>${esc(x.msg)}</span></div>`).join('')}</div>`:''}
+
+/* ========== steps ========== */
+function st1(){return `${stepWarn(0)}
+${CARD('','📅 วันที่ดำเนินการสำรวจ',`<div class="grid">${F('f.date','วัน/เดือน/ปี',{type:'date'})}</div>`)}
+${CARD('1.1','ผู้ให้ข้อมูล',`${RD('f.title',['นาย','นาง','นางสาว'],'คำนำหน้า')}<div class="grid">${F('f.name','ชื่อ-สกุล',{cls:'full'})}</div>`)}
+${CARD('1.2','ประเภทสถานประกอบการ',`${RD('f.type',['วิสาหกิจชุมชน','กลุ่มเกษตรกร','อื่นๆ'],'ประเภท')}<div class="grid">${F('f.typeOther','อื่นๆ ระบุ')}${F('f.members','จำนวนสมาชิก',{type:'num',unit:'คน'})}</div>`)}
+${CARD('1.3','สถานประกอบการ',`<div class="grid">${F('f.shop','ชื่อสถานประกอบการที่จดทะเบียน',{cls:'full'})}${F('f.product','ผลิตภัณฑ์หลักในการขอมาตรฐาน “ผลิตภัณฑ์ชุมชน ลดใช้พลังงาน”',{cls:'full'})}</div>`)}
+${CARD('1.4','ที่อยู่',`<div class="grid">${F('f.house','บ้านเลขที่')}${F('f.moo','หมู่ที่',{type:'num'})}${F('f.village','หมู่บ้าน')}${F('f.tambon','ตำบล')}${F('f.amphoe','อำเภอ')}${F('f.province','จังหวัด')}${F('f.zip','รหัสไปรษณีย์',{type:'tel'})}${F('f.phone','เบอร์โทรศัพท์',{type:'tel'})}</div>`)}
+${CARD('1.5','ตำแหน่งที่ตั้งตามพิกัด GPS',`<div class="grid">${F('f.lat','ละติจูด',{type:'num'})}${F('f.lng','ลองติจูด',{type:'num'})}</div><div class="acts"><button class="btn pri" onclick="getGPS()">📍 อ่านพิกัดจากมือถือ</button><button class="btn" onclick="openMap()">🗺️ เปิดแผนที่</button></div>`)}
+${CARD('1.6','ช่วงระยะเวลาการทำงาน หรือการผลิต',`${RD('f.period',['ตลอดปี','บางช่วงเวลา'],'ช่วงเวลา')}<div class="grid">${F('f.periodMonths','ระบุเดือน (กรณีบางช่วงเวลา)',{cls:'full'})}</div>${RD('f.reg',['ตามออเดอร์','เป็นประจำ'],'ความสม่ำเสมอ')}<div class="grid">${F('f.daysMonth','จำนวนวันที่ผลิตต่อเดือน',{type:'num',unit:'วัน'})}${F('f.monthsYear','จำนวนเดือนที่ผลิตต่อปี',{type:'num',unit:'เดือน'})}</div>`)}
+${CARD('1.7–1.8','ปริมาณการผลิต',`<div class="grid">${F('f.kgRound','1.8.1 ต่อ 1 รอบการผลิต',{type:'num',unit:'กก./รอบ'})}${F('f.kgDay','1.8.2 ต่อวัน',{type:'num',unit:'กก./วัน'})}${F('f.kgMonth','1.7 เฉลี่ยต่อเดือน',{type:'num',unit:'กก./เดือน'})}${F('f.kgYear','1.7 ต่อปี',{type:'num',unit:'กก./ปี'})}</div>
+<div class="calcs">${CALC('estMonth','คำนวณ: ต่อวัน × วัน/เดือน','กก./เดือน')}${CALC('estYear','คำนวณ: ต่อเดือน × เดือน/ปี','กก./ปี')}</div><div class="acts"><button class="btn" onclick="fillProd()">🧮 ใช้ค่าที่คำนวณได้</button></div>
+<div class="grid" style="margin-top:10px">${F('f.note1','หมายเหตุท้ายหน้า 1 (เช่น นน. 135 g/ถุง)',{cls:'full'})}</div>`)}`}
+
+function st2(){const B=PTY(cur).bag;const sz=cur.t.sizes.map((r,i)=>`<div class="row"><div class="rh"><i>${i+1}</i><b>ขนาดที่ ${i+1}</b></div><div class="rg">${F(`t.sizes.${i}.w`,'น้ำหนัก',{type:'num'})}${SEL(`t.sizes.${i}.u`,[['g','กรัม/'+B],['kg','กก./'+B]],'หน่วย')}${F(`t.sizes.${i}.q`,'จำนวน',{type:'num',unit:B+'/เดือน'})}${F(`t.sizes.${i}.p`,'ราคา',{type:'num',unit:'บาท/'+B})}</div></div>`).join('');
+ return `${stepWarn(1)}
+${CARD('1.9','ปริมาณการจำหน่ายผลิตภัณฑ์จำแนกตามขนาดต่อเดือน',`<div class="tbl">${sz}</div><div class="calcs">${CALC('salesKg','รวมจำหน่ายต่อเดือน','กก.')}${CALC('revenue','รายได้ต่อเดือน','บาท')}</div>`)}
+${CARD('1.10','ช่องทางการจัดจำหน่ายสินค้า',`<div class="grid">${F('f.ch1','1.',{ph:'เช่น หน้าร้าน'})}${F('f.ch2','2.',{ph:'เช่น ออนไลน์'})}</div>`)}
+${CARD('1.11','อายุการเก็บรักษาสินค้า (Shelf Life)',`<div class="grid">${F('f.shelf','อายุ',{type:'num'})}${SEL('f.shelfU',['','เดือน','ปี','วัน'],'หน่วย')}${F('f.storage','วิธีการเก็บรักษา',{cls:'full'})}</div>`)}
+${CARD('1.12','เงื่อนไขการจำหน่าย',`<div class="cbs">${CB('f.c12_sell','ขายขาด')}${CB('f.c12_sellret','ขายขาดแบบมีเงื่อนไขคืนสินค้า')}${CB('f.c12_cons','ฝากขาย')}${CB('f.c12_consg','ฝากขายแบบการันตียอด')}${CB('f.c12_oem','รับจ้างผลิต (OEM)')}</div>`,'ตอบได้มากกว่า 1 ข้อ')}
+${CARD('1.13','การให้เครดิตแก่ผู้ซื้อ',`<div class="grid">${F('f.credit','เครดิต',{type:'num',unit:'วัน'})}${F('f.creditOther','อื่นๆ (เช่น ชำระทันที)')}</div>`)}
+${CARD('1.14','การรับประกัน/เงื่อนไขการรับผิดชอบสินค้า',`<div class="cbs">${CB('f.c14_none','ไม่มีการรับประกัน')}${CB('f.c14_ins','รับประกันสินค้า กรณีสินค้าเสียหาย/ชำรุด')}${CB('f.c14_exch','รับเปลี่ยนสินค้า กรณีสินค้าเสียหาย/ชำรุด')}${CB('f.c14_ret','รับคืนสินค้า กรณีสินค้าเสียหาย/ชำรุด')}${CB('f.c14_resp','รับผิดชอบกรณีสินค้าไม่ตรงตามที่สั่งซื้อ')}${CB('f.c14_other','อื่นๆ')}</div><div class="grid">${F('f.c14_otherTxt','อื่นๆ ระบุ')}${F('f.c14_detail','รายละเอียดการรับประกัน/ระยะเวลา/เงื่อนไขเพิ่มเติม',{cls:'full'})}</div>`,'ตอบได้มากกว่า 1 ข้อ')}
+${CARD('1.15','ข้อมูลฉลากผลิตภัณฑ์',`${RD('f.label',['มี','ไม่มี'],'ติด/แสดงฉลากผลิตภัณฑ์')}<p class="sub">รายละเอียดบนฉลากที่แสดง</p><div class="cbs">${CB('f.l15_name','ชื่อ/ที่อยู่ผู้ผลิต')}${CB('f.l15_net','ปริมาณสุทธิ')}${CB('f.l15_date','วันผลิต / วันหมดอายุ หรือ ควรบริโภคก่อน')}${CB('f.l15_ing','ส่วนประกอบที่สำคัญ')}${CB('f.l15_reg','เลขสารบบ/เลขทะเบียน/เครื่องหมายรับรองที่เกี่ยวข้อง')}${CB('f.l15_store','วิธีเก็บรักษา')}</div>`)}
+${CARD('1.16','ความพร้อมในการวางจำหน่ายผ่านเครือข่ายพันธมิตร',`${RD('f.ready',['มีความพร้อม','ต้องปรับปรุง/พัฒนาก่อน'],'ความพร้อม')}<div class="grid">${F('f.readyTxt','ส่วนที่ต้องปรับปรุง/พัฒนา (โปรดระบุ)',{cls:'full'})}</div>`)}`}
+
+function st3(){return CARD('1.17','แผนผังสถานประกอบการ',`<p class="tip">👆 แตะเพื่อเลือก · ลากเพื่อย้าย · ลากจุดมุมขวาล่างเพื่อปรับขนาด</p><div class="lay" id="lay"></div><div class="acts"><button class="btn" onclick="addItem('rect')">⬜ เพิ่มกล่อง</button><button class="btn" onclick="addItem('circle')">⚪ เพิ่มวงกลม</button></div><div id="laySel"></div>`,'ตำแหน่งอาคาร / เครื่องจักร / อุปกรณ์ที่สำคัญ')}
+
+function st4(){return CARD('ส่วนที่ 2','ข้อมูลมาตรฐานของผู้ประกอบการ',PTY(cur).std.map((s,i)=>`<div class="std-row"><div class="std-h"><div class="bdg-s">${s.b}</div>${CB(`t.std.${i}.on`,s.n)}</div><div class="grid" style="margin-top:8px">${s.other?F(`t.std.${i}.x`,'ระบุมาตรฐาน'):''}${s.stars?F('f.otopStars','จำนวนดาว',{type:'num',unit:'ดวง'}):''}${F(`t.std.${i}.no`,'เลขทะเบียน')}${F(`t.std.${i}.date`,'วัน/เดือน/ปี ที่ได้รับอนุญาต')}</div></div>`).join(''),'เครื่องหมายรับรองมาตรฐานของผลิตภัณฑ์ที่ได้รับอนุญาต (ถ่ายรูปเอกสารแนบในขั้นตอน “รูปภาพประกอบ”)')}
+
+function st5(){const P=PTY(cur);return `${stepWarn(4)}
+${CARD('ส่วนที่ 3','ลำดับขั้นตอนกระบวนการผลิต',`<div class="cbs" style="grid-template-columns:1fr">${P.flow.map((x,i)=>CB('f.'+x.k,`${'①②③④⑤'[i]} ${x.t.replace(/ \(กรอกข้อมูลข้อ (.+)\)/,'')} — ${x.s} (ข้อ ${(x.t.match(/ข้อ (\S+)\)/)||[])[1]||''})`)).join('')}</div><div class="grid">${F('f.processNote','รายละเอียดขั้นตอนเพิ่มเติม (ถ้ามี)',{cls:'full',area:1})}</div>`,'ทำเครื่องหมายในขั้นตอนที่มีจริง')}
+${CARD('3.1','ปริมาณการผลิตต่อ 1 รอบการผลิต',`<div class="grid">${F('f.s31',P.L.s31,{type:'num',unit:'กก./รอบ'})}${F('f.s31note','บันทึกประกอบ (เช่น 100 '+P.bag+' / 135 g)')}</div>`)}
+${CARD('3.2','วัตถุดิบหลักที่ใช้ในกระบวนการผลิต (ต่อ 1 รอบ)',`${TBL('raw32')}<div class="grid">${F('f.noteRaw','หมายเหตุข้างตาราง',{cls:'full'})}</div>`)}`}
+
+function st6(){const P=PTY(cur);return `${stepWarn(5)}
+<div class="card"><div class="cbs" style="margin:0">${CB('f.prepNone','ไม่มีการใช้พลังงานในกระบวนการเตรียมวัตถุดิบ (พิมพ์ “ไม่มี” ท้ายหัวข้อ 3.3)')}</div></div>
+${CARD('3.3.1','การติดตั้งเทคโนโลยีในกระบวนการเตรียมวัตถุดิบ',TBL('tech331'),'เฉพาะอุปกรณ์/เครื่องจักรที่มีการใช้พลังงาน')}
+${CARD('3.3.2','การใช้งานเทคโนโลยีในกระบวนการเตรียมวัตถุดิบ',`<div class="grid">${F('f.p332out',P.L.p332out,{type:'num',unit:'กก./รอบ'})}</div>
+<div class="sec" style="font-size:15px;margin-top:6px">${P.icon} วัตถุดิบที่ใช้ (ต่อรอบ)</div><div class="acts" style="margin:-4px 0 10px"><button class="btn" onclick="copyRaw()">📋 คัดลอกจากข้อ 3.2</button></div>${TBL('raw332')}
+<div class="sec" style="font-size:15px;margin-top:6px">⚙️ อุปกรณ์ไฟฟ้า & ระยะเวลาใช้งาน</div>
+<div class="grid">${F('f.p332dev','ระบุอุปกรณ์ไฟฟ้า',{ph:'เช่น เครื่องตีแป้ง'})}${F('f.p332kw','กำลังไฟฟ้า',{type:'num',unit:'kW'})}${F('f.p332dur','ระยะเวลา',{type:'num'})}${SEL('f.p332du',['นาที','วินาที','ชม.'],'หน่วยเวลา')}${F('f.p332yield','ปริมาณที่ได้ต่อรอบ',{type:'num'})}${F('f.p332yu','หน่วย',{ph:'กก.'})}</div>
+<div class="calcs">${CALC('p332h','คิดเป็นจำนวน','ชม.')}${CALC('p332kwh','พลังงานไฟฟ้า','kWh/รอบ')}</div>`)}`}
+
+function st7(){return `${stepWarn(6)}
+${CARD('3.4.1','การติดตั้งเทคโนโลยีในกระบวนการปิ้งขนมทองม้วน',TBL('stove341'),'กรอกเฉพาะแถวที่มีจริง')}
+${CARD('3.4.2','ลักษณะของภาชนะที่ใช้ในกระบวนการปิ้ง/อบขนมทองม้วน',`<div class="grid">${F('f.p342in','ปริมาณวัตถุดิบจากกระบวนการเตรียมที่ใช้',{type:'num',unit:'กก./รอบ'})}${F('f.p342out','ปริมาณขนมทองม้วนที่ได้',{type:'num',unit:'กก./รอบ'})}</div>${TBL('r342')}`)}`}
+
+function stLP7(){return `${stepWarn(6)}
+${CARD('3.4.1','การติดตั้งเทคโนโลยีในกระบวนการตากสมุนไพร',TBL('dry341'),'กรอกเฉพาะแถวที่มีจริง · ขนาดมาตรฐานแสดงเป็นตัวจาง (เว้นว่างได้)')}
+${CARD('3.4.2','ลักษณะของภาชนะที่ใช้ในกระบวนการตากแห้งสมุนไพร',`${TBL('tray342')}<div class="calcs">${CALC('trayArea','พื้นที่ภาชนะรวม','ตร.ม.')}</div>`,'ใส่ขนาดเป็นเมตร เช่น 92 ซม. = 0.92 · พื้นที่คำนวณให้อัตโนมัติ')}
+${CARD('3.4.3','การใช้งานเทคโนโลยีพลังงานในกระบวนการตากแห้งสมุนไพร',`<div class="grid">${F('f.p343in','ปริมาณวัตถุดิบจากกระบวนการเตรียมที่ใช้',{type:'num',unit:'กก./รอบ'})}${F('f.p343out','ปริมาณสมุนไพรตากแห้งทั้งหมดที่ได้',{type:'num',unit:'กก./รอบ'})}</div>${RD('f.heatType',['ไม่มี','ชีวมวล','LPG'],'ความร้อนเสริมที่ใช้')}<div class="grid">${F('f.heatBio','ชนิดชีวมวล (ถ้ามี)')}</div>${TBL('dry343')}<div class="calcs">${CALC('wb','น้ำหนักก่อนตากรวม','กก.')}${CALC('wa','น้ำหนักหลังตากรวม','กก.')}</div>`)}`}
+
+function st8(){const P=PTY(cur);return CARD('3.5','เครื่องจักร หรืออุปกรณ์อื่นๆ เพิ่มเติม',`<div class="grid">${F('f.p35in',P.L.p35in,{type:'num',unit:'กก./รอบ'})}${F('f.p35out',P.L.p35out,{type:'num',unit:'กก./รอบ'})}</div>${TBL('m35')}`,'เฉพาะอุปกรณ์ที่มีการใช้พลังงาน')}
+
+function st9(){return `${stepWarn(8)}
+${CARD('4.1','ค่าใช้จ่ายพลังงานชีวมวล',`<div class="cbs">${CB('f.bioNone','ไม่มีการใช้ชีวมวล')}</div>${TBL('bio41')}`)}
+${CARD('4.2','ค่าใช้จ่ายก๊าซหุงต้ม',`<div class="cbs">${CB('f.lpgNone','ไม่มีการใช้ก๊าซหุงต้ม')}</div>${TBL('lpg42')}`)}
+${CARD('4.3','ค่าใช้จ่ายพลังงานไฟฟ้า',`${TBL('el43')}<div class="calcs">${CALC('unitPrice','ค่าไฟเฉลี่ย','บาท/หน่วย')}${CALC('kwhMonthEst','ไฟจากเครื่องจักร (คำนวณ)','หน่วย/เดือน')}</div>`)}`}
+
+function st10(){return `${stepWarn(9)}
+${CARD('ส่วนที่ 5','ข้อมูลการจัดการของเสียที่เกิดขึ้นในกระบวนการผลิต',`<div class="cbs">${CB('f.wasteNone','ไม่มีของเสีย (พิมพ์ “ไม่มี”)')}</div>${TBL('waste5')}<p class="tip">💡 ตัวอย่างการใช้ประโยชน์ — ${PTY(cur).L.wasteEx}</p>`)}
+${CARD('','✍️ ผู้บันทึกข้อมูล',`${RD('f.recTitle',['นาย','นาง','นางสาว'],'คำนำหน้า')}<div class="grid">${F('f.recName','ชื่อ-สกุล',{cls:'w2'})}${F('f.recPhone','เบอร์โทรศัพท์ติดต่อ',{type:'tel'})}</div>`)}`}
+
+function st11(){return `<p class="tip">📷 ถ่ายรูปได้ทันทีจากกล้องมือถือ · รูปจะถูกย่อขนาดอัตโนมัติ · ใส่คำบรรยายใต้รูปได้</p>`+PH.map(p=>{const arr=cur.photos[p.k]||[];const ok=arr.length>=p.m;
+ return `<div class="card"><div class="sec">${ok?'✅':'📷'} ${p.n} <span class="badge ${ok?'ok':p.opt?'':'warn'}">${arr.length}/${p.m} รูป</span></div><div class="phgrid">${arr.map((x,i)=>`<div class="ph-it"><img src="${x.src}" alt=""><input data-p="photos.${p.k}.${i}.cap" value="${esc(x.cap||'')}" placeholder="คำบรรยายภาพ"><button onclick="delPhoto('${p.k}',${i})" aria-label="ลบรูป">✕</button></div>`).join('')}<label class="ph-add">➕<span>ถ่าย/เลือกรูป</span><input type="file" accept="image/*" multiple hidden onchange="addPhotos('${p.k}',this)"></label></div></div>`}).join('')}
+
+function st12(){const a=certAuto();return CARD('','📄 ใบรับรองการเข้าพื้นที่สำรวจ',`<p class="tip">ช่องที่เว้นว่างจะใช้ข้อมูลจากแบบสำรวจโดยอัตโนมัติ (แสดงเป็นตัวอักษรจาง)</p>
+<div class="grid">${F('f.certGroup','ณ / ชื่อกลุ่ม/สถานที่ตรวจวัด',{cls:'full',ph:a.group})}${F('f.certDate','วันที่',{type:'date'})}${F('f.certCollector','1) ชื่อผู้เก็บข้อมูล',{cls:'w2',ph:a.collector})}${F('f.certCollectorPhone','เบอร์โทรผู้เก็บข้อมูล',{type:'tel',ph:a.cphone})}${F('f.certAddr','3) ที่อยู่/ที่ตั้ง',{cls:'full',ph:a.addr})}${F('f.certName','4) ชื่อผู้รับรอง (ประธานกลุ่ม/สมาชิกกลุ่ม)',{cls:'w2',ph:a.name})}${F('f.certPhone','5) เบอร์โทรผู้รับรอง',{type:'tel',ph:a.phone})}</div>`,'ผู้รับรองลงนามด้วยปากกาหลังพิมพ์')}
+
+function st13(){const c=calc(cur),w=checks(cur,c),p=progress(cur);const ne=w.filter(x=>x.lvl==='err').length;
+ return `<div class="card"><div class="sec">📊 ความครบถ้วน ${p}% ${ne?`<span class="badge err">⛔ ${ne} ต้องแก้</span>`:''} ${w.length-ne?`<span class="badge warn">⚠️ ${w.length-ne} ควรตรวจ</span>`:''} ${!w.length?'<span class="badge ok">✓ พร้อมส่ง</span>':''}</div><div class="prog"><i style="width:${p}%"></i></div>
+ ${w.map(x=>`<div class="warnbox ${x.lvl}">${x.lvl==='err'?'⛔':x.lvl==='warn'?'⚠️':'ℹ️'} <span>${esc(x.msg)}</span><button class="btn" onclick="toStep(${x.step})">แก้ไข</button></div>`).join('')}</div>
+ <div class="card"><div class="sec">⚡ สรุปการใช้พลังงาน (ต่อรอบการผลิต)</div><div class="kpis">
+ <div class="kpi"><span>ไฟฟ้า</span><b>${fmt(c.kwhRound,3)}</b> <small>kWh/รอบ</small></div>
+ <div class="kpi"><span>ก๊าซ LPG</span><b>${fmt(c.lpgRound)}</b> <small>กก./รอบ</small></div>
+ <div class="kpi"><span>ชีวมวล</span><b>${fmt(c.bioRound)}</b> <small>กก./รอบ</small></div>
+ <div class="kpi"><span>ค่าพลังงานรวม</span><b>${fmt(c.costRound)}</b> <small>บาท/รอบ</small></div>
+ <div class="kpi"><span>ค่าพลังงานต่อ กก. ผลผลิต</span><b>${fmt(c.costKg)}</b> <small>บาท/กก.</small></div>
+ <div class="kpi"><span>LPG ต่อ กก. ผลผลิต</span><b>${fmt(c.lpgKg,3)}</b> <small>กก./กก.</small></div>
+ <div class="kpi"><span>ไฟจากเครื่องจักร / บิล</span><b>${fmt(c.kwhMonthEst,1)}</b> <small>/ ${fmt(c.billUnits)} หน่วย/เดือน</small></div>
+ ${cur.ptype==='lp'?`<div class="kpi"><span>สมุนไพร สด → แห้ง</span><b>${fmt(c.wb)} → ${fmt(c.wa)}</b> <small>กก./รอบ</small></div><div class="kpi"><span>พื้นที่ภาชนะ / พื้นที่ตากจริง</span><b>${fmt(c.trayArea||0,2)}</b> <small>/ ${fmt(c.dryArea||0,3)} ตร.ม.</small></div>`:''}
+ <div class="kpi"><span>ยอดจำหน่าย/เดือน</span><b>${fmt(c.salesKg)}</b> <small>กก. · ${fmt(c.revenue,0)} บาท</small></div>
+ </div><p class="tip" style="margin-top:10px">ผลผลิตต่อรอบที่ใช้คำนวณ = ${fmt(c.prodRound)} กก. · ค่าก๊าซ ${fmt(c.lpgCostRound)} บาท · ค่าไฟ ${fmt(c.elecCostRound)} บาท ต่อรอบ</p></div>
+ ${CARD('','📝 บันทึกจุดที่ต้องตรวจซ้ำ (ไม่พิมพ์)',`<div class="grid">${F('f.reviewNote','บันทึกภายใน',{cls:'full',area:1})}</div>`)}
+ <div class="card"><div class="sec">🖨️ พิมพ์รายงาน A4</div><div class="cbs">${CB('s.pForm','แบบสำรวจ 9 หน้า')}${CB('s.pPhoto','หน้าภาพประกอบ')}${CB('s.pCert','ใบรับรอง')}</div>
+ <div class="acts"><button class="btn pri big" onclick="openPreview()">👁️ ดูตัวอย่าง & พิมพ์ / บันทึก PDF</button></div>
+ <div class="acts"><button class="btn" onclick="exportShop('${cur.id}')">📤 ส่งออกไฟล์ข้อมูล (.json)</button></div>
+ <p class="tip" style="margin-top:10px">📱 บนมือถือ: กดพิมพ์ → เลือก “บันทึกเป็น PDF” แล้วส่งไฟล์ PDF ทาง LINE/อีเมล</p></div>`}
+
+const STEPS=[
+ {i:'👤',t:'ข้อมูลผู้ประกอบการ',s:'ข้อ 1.1–1.8',r:st1},{i:'🛒',t:'การจำหน่าย & ฉลาก',s:'ข้อ 1.9–1.16',r:st2},{i:'🗺️',t:'แผนผังสถานประกอบการ',s:'ข้อ 1.17',r:st3},{i:'🏅',t:'มาตรฐานผลิตภัณฑ์',s:'ส่วนที่ 2',r:st4},
+ {i:'🧾',t:'กระบวนการ & วัตถุดิบ',s:'ส่วนที่ 3 · ข้อ 3.1–3.2',r:st5},{i:'🥣',t:'เตรียมวัตถุดิบ',s:'ข้อ 3.3',r:st6},{i:'🔥',t:'ปิ้งขนมทองม้วน',s:'ข้อ 3.4',r:st7},{i:'📦',t:'บรรจุภัณฑ์',s:'ข้อ 3.5',r:st8},
+ {i:'⚡',t:'ค่าใช้จ่ายพลังงาน',s:'ส่วนที่ 4',r:st9},{i:'♻️',t:'ของเสีย & ผู้บันทึก',s:'ส่วนที่ 5',r:st10},{i:'📷',t:'รูปภาพประกอบ',s:'รูปที่ต้องแนบ',r:st11},{i:'✍️',t:'ใบรับรอง',s:'ใบรับรองการเข้าพื้นที่',r:st12},{i:'✅',t:'ตรวจสอบ & พิมพ์',s:'สรุปและส่งรายงาน',r:st13}];
+
+function stepsFor(d){const P=PTY(d);return STEPS.map((s,i)=>i===6?{i:P.L.step6[0],t:P.L.step6[1],s:P.L.step6[2],r:P.step6}:s)}
+
+/* ========== render ========== */
+function render(){$('#saved').textContent='';if(view==='home')renderHome();else if(view==='choose')renderChoose();else if(view==='settings')renderSettings();else renderEditor()}
+function renderChoose(){$('#ttl').textContent='เลือกประเภทแบบสำรวจ';$('#hb').innerHTML=`<button class="hbtn" onclick="go('home')">✕ ยกเลิก</button>`;$('#bnav').hidden=true;
+ app.innerHTML=`<p class="tip">เลือกแบบสำรวจให้ตรงกับผลิตภัณฑ์ของสถานประกอบการ — ฟอร์มและหน้าพิมพ์จะเปลี่ยนตามประเภท</p>`+Object.entries(PT).map(([k,P])=>`<div class="card shop" style="cursor:pointer" onclick="newShop('${k}')"><div class="sh-top"><div class="av">${P.icon}</div><div class="sh-i"><b>แบบสำรวจ “${P.name}”</b><span>${P.pages().length} หน้า · ขั้นตอนหลัก: ${P.flow.map(x=>x.t.replace(/ \(.*\)/,'')).join(' → ')}</span></div></div></div>`).join('')}
+function renderHome(){$('#ttl').textContent='แบบสำรวจผลิตภัณฑ์ลดใช้พลังงาน';$('#hb').innerHTML=`<button class="hbtn" onclick="go('settings')">⚙️ ตั้งค่า</button>`;$('#bnav').hidden=true;
+ const list=shops.slice().sort((a,b)=>b.updated-a.updated);
+ app.innerHTML=`${DB.mode!=='idb'?`<div class="stbanner">⚠️ เบราว์เซอร์นี้เก็บข้อมูลถาวรได้จำกัด${DB.mode==='mem'?' (ข้อมูลจะหายเมื่อปิดหน้า)':''} — กรุณากด “สำรองข้อมูล” เป็นระยะ</div>`:''}
+ <div class="card hero"><b>📋 ระบบเก็บข้อมูลภาคสนาม</b><span>โครงการพัฒนาและรับรองมาตรฐานการใช้พลังงานที่มีประสิทธิภาพของผลิตภัณฑ์ลดใช้พลังงาน · ${list.length} สถานประกอบการ</span>
+ <div class="acts" style="margin-top:12px"><button class="btn" onclick="go('choose')">➕ เพิ่มสถานประกอบการ</button><button class="btn" onclick="$('#imp').click()">📥 นำเข้าไฟล์</button><button class="btn" onclick="backupAll()">💾 สำรองข้อมูลทั้งหมด</button></div></div>
+ ${list.map(shopCard).join('')||'<div class="empty">ยังไม่มีข้อมูล — กด “เพิ่มสถานประกอบการ”</div>'}
+ <input type="file" id="imp" accept=".json,application/json" hidden onchange="importFile(this)">`}
+function shopCard(d){const c=calc(d),w=checks(d,c),p=progress(d),ne=w.filter(x=>x.lvl==='err').length;const loc=[d.f.tambon&&'ต.'+d.f.tambon,d.f.amphoe&&'อ.'+d.f.amphoe,d.f.province&&'จ.'+d.f.province].filter(Boolean).join(' ');
+ return `<div class="card shop"><div class="sh-top"><div class="av">${PTY(d).icon}</div><div class="sh-i"><b>${esc(d.f.shop||'(ยังไม่ตั้งชื่อ)')}</b><span class="badge ok" style="align-self:flex-start;margin:2px 0">แบบสำรวจ${PTY(d).name}</span><span>${esc(loc||'—')} · สำรวจ ${thDate(d.f.date)||'-'}</span></div></div>
+ <div class="prog"><i style="width:${p}%"></i></div><div class="sh-meta"><span>กรอกแล้ว ${p}%</span>${ne?`<span class="badge err">⛔ ${ne} ต้องแก้</span>`:w.length?`<span class="badge warn">⚠️ ${w.length} ควรตรวจ</span>`:'<span class="badge ok">✓ พร้อมส่ง</span>'}</div>
+ <div class="acts"><button class="btn pri" onclick="openShop('${d.id}')">✏️ กรอก/แก้ไข</button><button class="btn" onclick="openShop('${d.id}',12)">🖨️ ตรวจ & พิมพ์</button><button class="btn" onclick="dupShop('${d.id}')">📄 ทำสำเนา</button><button class="btn" onclick="exportShop('${d.id}')">📤 ส่งออก</button><button class="btn danger" onclick="delShop('${d.id}')" aria-label="ลบ">🗑️</button></div></div>`}
+function renderEditor(){const d=cur,STEPS=stepsFor(cur);$('#ttl').textContent=d.f.shop||'สถานประกอบการใหม่';$('#hb').innerHTML=`<button class="hbtn" onclick="go('home')">🏠 รายการ</button>`;
+ app.innerHTML=`<nav class="chips">${STEPS.map((s,i)=>`<button class="chip ${i===step?'on':''}" onclick="toStep(${i})"><i>${i+1}</i>${s.i} ${s.t}</button>`).join('')}</nav>
+ <div class="stephead"><div class="big">${STEPS[step].i}</div><div><small>ขั้นตอนที่ ${step+1} / ${STEPS.length} · ${STEPS[step].s}</small><h2>${STEPS[step].t}</h2></div></div><div id="stepBody">${STEPS[step].r(d)}</div>`;
+ const bn=$('#bnav');bn.hidden=false;$('#bprev').disabled=step===0;$('#bnext').textContent=step===STEPS.length-1?'🏠 เสร็จสิ้น':'ถัดไป ▶';$('#bmid').textContent=`${step+1}/${STEPS.length}`;
+ const on=$('.chip.on');if(on)on.scrollIntoView({inline:'center',block:'nearest'});
+ if(step===2)bindLayout();updateCalcs()}
+function renderSettings(){$('#ttl').textContent='ตั้งค่า';$('#hb').innerHTML=`<button class="hbtn" onclick="go('home')">🏠 รายการ</button>`;$('#bnav').hidden=true;
+ app.innerHTML=`${CARD('','🧾 หัวกระดาษรายงาน',`<div class="grid">${F('s.year','งบประมาณประจำปี')}${F('s.partner','หน่วยงานร่วม (ใบรับรอง)',{cls:'w2'})}</div>
+ <div class="acts">${logoBtn('logo','โลโก้หน่วยงานหลัก')}${logoBtn('logo2','โลโก้หน่วยงานร่วม')}</div>`)}
+ ${CARD('','✍️ ผู้เก็บข้อมูล (เติมอัตโนมัติเมื่อเพิ่มร้านใหม่)',`${RD('s.recTitle',['นาย','นาง','นางสาว'],'คำนำหน้า')}<div class="grid">${F('s.recName','ชื่อ-สกุล',{cls:'w2'})}${F('s.recPhone','เบอร์โทร',{type:'tel'})}</div>`)}
+ ${CARD('','💾 ข้อมูล',`<div class="acts"><button class="btn" onclick="backupAll()">💾 สำรองข้อมูลทั้งหมด</button><button class="btn" onclick="addSample()">🍪 เพิ่มข้อมูลตัวอย่าง</button></div><p class="tip" style="margin-top:10px">ที่เก็บข้อมูล: ${DB.mode==='idb'?'IndexedDB ในเครื่อง (ถาวร)':DB.mode==='ls'?'localStorage (จำกัด ~5MB)':'หน่วยความจำชั่วคราว'}</p>`)}`}
+function logoBtn(k,l){return `<label class="btn">${S[k]?`<img src="${S[k]}" style="height:22px;vertical-align:middle"> `:'🖼️ '}${l}<input type="file" accept="image/*" hidden onchange="setLogo('${k}',this)"></label>${S[k]?`<button class="btn danger" onclick="S.${k}='';saveS();render()">ลบ</button>`:''}`}
+function updateCalcs(){if(!cur)return;const c=calc(cur);$$('[data-c]').forEach(el=>{const k=el.dataset.c,x=getP(c,k);el.textContent=typeof x==='number'?fmt(x,/(^|\.)h$/.test(k)?3:k.includes('kwh')?3:2):(x??'-')})}
+
+/* ========== events ========== */
+function onEdit(e){const el=e.target,p=el.dataset&&el.dataset.p;if(!p)return;if(el.type==='radio'&&!el.checked)return;
+ const val=el.type==='checkbox'?el.checked:el.value;
+ if(p.startsWith('s.')){setP(S,p.slice(2),val);saveS();return}
+ if(!cur)return;setP(cur,p,val);
+ if(p==='f.shop')$('#ttl').textContent=val||'สถานประกอบการใหม่';
+ if(p.startsWith('layout.'))drawLayoutItems();
+ touch()}
+app.addEventListener('input',onEdit);app.addEventListener('change',onEdit);
+function touch(){cur.updated=Date.now();updateCalcs();$('#saved').textContent='กำลังบันทึก…';clearTimeout(saveT);saveT=setTimeout(async()=>{try{await DB.put(cur);$('#saved').textContent='บันทึกแล้ว ✓'}catch(e){$('#saved').textContent='บันทึกไม่ได้!';toast('⚠️ บันทึกไม่สำเร็จ: '+e)}},350)}
+function saveS(){DB.set('settings',S)}
+$('#bprev').onclick=()=>toStep(step-1);
+$('#bnext').onclick=()=>{if(step===STEPS.length-1)go('home');else toStep(step+1)};
+function toStep(i){step=clamp(i,0,STEPS.length-1);selItem=-1;renderEditor();window.scrollTo(0,0)}
+async function flush(){if(cur){clearTimeout(saveT);await DB.put(cur)}}
+async function go(v){await flush();if(v==='home'){shops=await DB.all();cur=null}view=v;render();window.scrollTo(0,0)}
+async function openShop(id,st=0){cur=norm(shops.find(s=>s.id===id));step=st;view='edit';history.pushState({v:'edit'},'');render();window.scrollTo(0,0)}
+window.addEventListener('popstate',()=>{if(document.body.classList.contains('preview')){closePreview();history.pushState({v:'edit'},'');return}if(view!=='home')go('home')});
+async function newShop(pt='tm'){const d=blank(pt);d.f.recTitle=S.recTitle;d.f.recName=S.recName;d.f.recPhone=S.recPhone;await DB.put(d);shops.push(d);openShop(d.id)}
+async function addSample(){await DB.put(sample());await DB.put(sampleLP());shops=await DB.all();toast('เพิ่มข้อมูลตัวอย่างแล้ว');go('home')}
+async function dupShop(id){const d=clone(shops.find(s=>s.id===id));d.id=uid();d.created=d.updated=Date.now();d.f.shop=(d.f.shop||'')+' (สำเนา)';await DB.put(d);shops=await DB.all();renderHome();toast('ทำสำเนาแล้ว')}
+async function delShop(id){const d=shops.find(s=>s.id===id);if(!confirm(`ลบ “${d.f.shop||'(ไม่มีชื่อ)'}” ถาวร?\n(แนะนำให้ส่งออกไฟล์สำรองก่อน)`))return;await DB.del(id);shops=await DB.all();renderHome();toast('ลบแล้ว')}
+function fillProd(){const c=calc(cur);if(c.estMonth)cur.f.kgMonth=String(+c.estMonth.toFixed(2));const c2=calc(cur);if(c2.estYear)cur.f.kgYear=String(+c2.estYear.toFixed(2));touch();renderEditor()}
+function copyRaw(){const TT=T(cur),nm=x=>(x.n||'').replace(/ ระบุ$/,''),used=new Set();TT.raw332.rows.forEach((def,i)=>{if(def.free)return;const j=TT.raw32.rows.findIndex((d2,k)=>!used.has(k)&&!d2.free&&nm(d2)===nm(def));if(j<0)return;used.add(j);const r=cur.t.raw32[j]||{};cur.t.raw332[i]=Object.assign(cur.t.raw332[i]||{},{x:r.x||'',q:r.q||'',u:r.u||''})});const fr=TT.raw32.rows.map((d2,k)=>d2.free?k:-1).filter(k=>k>=0),to=TT.raw332.rows.map((d2,k)=>d2.free?k:-1).filter(k=>k>=0);fr.forEach((k,n)=>{const r=cur.t.raw32[k];if(r&&has(r.n)&&to[n]!==undefined)cur.t.raw332[to[n]]=Object.assign(cur.t.raw332[to[n]]||{},{n:r.n,q:r.q||'',u:r.u||''})});touch();renderEditor();toast('คัดลอกวัตถุดิบจากข้อ 3.2 แล้ว')}
+function getGPS(){if(!navigator.geolocation)return toast('อุปกรณ์ไม่รองรับ GPS — กรุณากรอกเอง');toast('กำลังอ่านพิกัด…');
+ navigator.geolocation.getCurrentPosition(p=>{cur.f.lat=p.coords.latitude.toFixed(6);cur.f.lng=p.coords.longitude.toFixed(6);touch();renderEditor();toast(`ได้พิกัดแล้ว (±${Math.round(p.coords.accuracy)} ม.)`)},e=>toast('อ่าน GPS ไม่ได้ — กรุณากรอกเอง หรือคัดลอกจาก Google Maps'),{enableHighAccuracy:true,timeout:15000})}
+function openMap(){if(!has(cur.f.lat))return toast('ยังไม่มีพิกัด');window.open(`https://www.google.com/maps?q=${cur.f.lat},${cur.f.lng}`,'_blank')}
+
+/* layout editor */
+function drawLayoutItems(){const L=$('#lay');if(!L)return;L.innerHTML=cur.layout.map((it,i)=>`<div class="li ${it.shape} ${i===selItem?'sel':''}" data-i="${i}" style="left:${it.x}%;top:${it.y}%;width:${it.w}%;height:${it.h}%"><span>${esc(it.label||'')}</span><b class="rz"></b></div>`).join('')}
+function drawLaySel(){const box=$('#laySel');if(!box)return;const it=cur.layout[selItem];box.innerHTML=it?`<div class="selbox"><div class="grid">${F(`layout.${selItem}.label`,'ชื่อจุด / อาคาร / เครื่องจักร',{cls:'full'})}</div><div class="acts"><button class="btn" onclick="toggleShape()">🔁 สลับกล่อง/วงกลม</button><button class="btn danger" onclick="delItem()">🗑️ ลบ</button></div></div>`:''}
+function bindLayout(){drawLayoutItems();drawLaySel();const L=$('#lay');let drag=null;
+ L.onpointerdown=e=>{const el=e.target.closest('.li');if(!el){selItem=-1;drawLayoutItems();drawLaySel();return}
+  const i=+el.dataset.i;if(selItem!==i){selItem=i;drawLaySel()}drag={i,mode:e.target.classList.contains('rz')?'rz':'mv',sx:e.clientX,sy:e.clientY,o:{...cur.layout[i]},r:L.getBoundingClientRect()};
+  try{L.setPointerCapture(e.pointerId)}catch(_){}e.preventDefault();drawLayoutItems()};
+ L.onpointermove=e=>{if(!drag)return;const it=cur.layout[drag.i],dx=(e.clientX-drag.sx)/drag.r.width*100,dy=(e.clientY-drag.sy)/drag.r.height*100;
+  if(drag.mode==='mv'){it.x=+clamp(drag.o.x+dx,0,100-it.w).toFixed(2);it.y=+clamp(drag.o.y+dy,0,100-it.h).toFixed(2)}else{it.w=+clamp(drag.o.w+dx,6,100-it.x).toFixed(2);it.h=+clamp(drag.o.h+dy,8,100-it.y).toFixed(2)}
+  const el=L.querySelector(`.li[data-i="${drag.i}"]`);if(el)Object.assign(el.style,{left:it.x+'%',top:it.y+'%',width:it.w+'%',height:it.h+'%'})};
+ L.onpointerup=L.onpointercancel=()=>{if(drag){drag=null;touch()}}}
+function addItem(shape){cur.layout.push({shape,label:shape==='circle'?'จุดใหม่':'อาคาร/เครื่องจักร',x:38,y:30,w:shape==='circle'?16:24,h:shape==='circle'?34:28});selItem=cur.layout.length-1;touch();drawLayoutItems();drawLaySel();const i=$('#laySel input');if(i){i.focus();i.select()}}
+function toggleShape(){const it=cur.layout[selItem];it.shape=it.shape==='circle'?'rect':'circle';touch();drawLayoutItems()}
+function delItem(){cur.layout.splice(selItem,1);selItem=-1;touch();drawLayoutItems();drawLaySel()}
+
+/* photos */
+function compress(file,M=1280,type='image/jpeg',q=.78){return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>{const img=new Image();img.onload=()=>{const s=Math.min(1,M/Math.max(img.width,img.height));const cv=document.createElement('canvas');cv.width=Math.round(img.width*s);cv.height=Math.round(img.height*s);const g=cv.getContext('2d');if(type==='image/jpeg'){g.fillStyle='#fff';g.fillRect(0,0,cv.width,cv.height)}g.drawImage(img,0,0,cv.width,cv.height);res(cv.toDataURL(type,q))};img.onerror=rej;img.src=fr.result};fr.onerror=rej;fr.readAsDataURL(file)})}
+async function addPhotos(k,inp){const files=[...inp.files];if(!files.length)return;toast('กำลังเพิ่มรูป…');cur.photos[k]=cur.photos[k]||[];
+ for(const f of files){try{cur.photos[k].push({id:uid(),src:await compress(f),cap:''})}catch(e){toast('เปิดรูปไม่ได้: '+f.name)}}touch();renderEditor()}
+function delPhoto(k,i){if(!confirm('ลบรูปนี้?'))return;cur.photos[k].splice(i,1);touch();renderEditor()}
+async function setLogo(k,inp){const f=inp.files[0];if(!f)return;S[k]=await compress(f,360,'image/png');saveS();render()}
+
+/* import / export */
+function download(name,text){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:'application/json'}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+const safe=s=>String(s||'ไม่มีชื่อ').replace(/[\\/:*?"<>|\s]+/g,'_');
+async function exportShop(id){await flush();const d=cur&&cur.id===id?cur:shops.find(s=>s.id===id);download(`แบบสำรวจ_${safe(d.f.shop)}_${d.f.date||''}.json`,JSON.stringify({app:'tongmuan-survey',v:1,shops:[d]}));toast('ส่งออกแล้ว')}
+async function backupAll(){await flush();const all=await DB.all();const dt=new Date().toISOString().slice(0,10);download(`สำรอง_แบบสำรวจทองม้วน_${dt}.json`,JSON.stringify({app:'tongmuan-survey',v:1,settings:S,shops:all}));toast(`สำรอง ${all.length} รายการแล้ว`)}
+async function importFile(inp){const f=inp.files[0];if(!f)return;try{const o=JSON.parse(await f.text());const arr=Array.isArray(o)?o:o.shops||(o.f?[o]:[]);if(!arr.length)throw 'ไม่พบข้อมูล';
+ let n=0;for(const d of arr){if(!d||!d.f)continue;const ex=shops.find(s=>s.id===d.id);if(ex&&!confirm(`“${d.f.shop}” มีอยู่แล้ว — เขียนทับ?`)){d.id=uid();d.f.shop+=' (นำเข้า)'}await DB.put(norm(d));n++}
+ if(o.settings&&confirm('นำเข้าการตั้งค่า (หัวกระดาษ/โลโก้) ด้วยหรือไม่?')){S=Object.assign(S,o.settings);saveS()}
+ shops=await DB.all();renderHome();toast(`นำเข้า ${n} รายการแล้ว`)}catch(e){alert('นำเข้าไม่สำเร็จ: '+e)}inp.value=''}
+
+/* ========== PRINT ========== */
+const v=x=>has(x)?esc(x):'';
+const nv=x=>{if(!has(x))return '';const s=String(x).trim();return /^-?[\d,]*\.?\d+$/.test(s)?num(s).toLocaleString('th-TH',{maximumFractionDigits:3}):esc(s)};
+const ck=b=>`<span class="ck">${b?'✓':''}</span>`;
+const dl=(x,w)=>`<span class="dl val"${w?` style="min-width:${w}mm"`:''}>${x||'&nbsp;'}</span>`;
+const pc=(x,dp=3)=>x?fmt(x,dp):'';
+let PDOC=null;
+function hdr(){return `<div class="ph"><div class="phl">${S.logo?`<img src="${S.logo}" alt="">`:''}<div><b>กองส่งเสริมและพัฒนา<br>พลังงานภูมิภาค</b><big>กระทรวงพลังงาน</big></div></div><div class="phr"><b>แบบสำรวจข้อมูล “${PTY(PDOC).name}”</b><br>“โครงการพัฒนาและรับรองมาตรฐานการใช้พลังงานที่มีประสิทธิภาพของผลิตภัณฑ์ลดใช้พลังงาน”<br>งบประมาณประจำปี ${esc(S.year)}</div></div>`}
+const ftr=n=>`<div class="pf"><span>กองส่งเสริมและพัฒนาพลังงานภูมิภาค กระทรวงพลังงาน</span><span>หน้า ${n} / ${PTY(PDOC).pages().length}</span></div>`;
+const page=(n,body,land)=>`<section class="pg${land?' land':''}">${hdr()}<div class="pb"><div class="fit">${body}</div></div>${ftr(n)}</section>`;
+function autoFit(){$$('#printRoot .pb').forEach(pb=>{const f=pb.firstElementChild;if(!f)return;f.style.transform='';f.style.width='';const H=pb.clientHeight,h=f.scrollHeight;if(h>H+1){const z=H/h*.97;f.style.transform=`scale(${z})`;f.style.width=(100/z)+'%'}})}
+const rn=(def,r)=>def.free?`<span class="val">${v(r.n)}</span>`:`${def.n}${def.spec?` <span class="val">${v(r.x)||'.............'}</span>${def.suf||''}`:''}`;
+const ttl=(sel)=>['นาย','นาง','นางสาว'].map(x=>has(sel)&&sel!==x?`<s>${x}</s>`:x).join('/');
+
+function pg1(d){const f=d.f,[dd,mm,yy]=thDate3(f.date),a=(l,k)=>`<td>${l}</td><td colspan="2" class="c val">${v(f[k])}</td>`;
+ return page(1,`<div class="p1top"><div class="ttl">แบบสำรวจข้อมูล<div class="ttlb">“${PTY(d).name}”</div></div><div class="dbox"><div class="dl1">วัน / เดือน / ปี<br>ที่ดำเนินการสำรวจ<br>(โปรดระบุในช่อง↓)</div><div class="d3"><span class="val">${dd}</span><span class="val">${mm}</span><span class="val">${yy}</span></div></div></div>
+<div class="inst"><b><u>คำชี้แจง</u></b><ol><li>แบบสำรวจข้อมูลฉบับนี้มีวัตถุประสงค์หลักที่ใช้สำหรับสอบถามข้อมูล <b>“กระบวนการผลิตและการใช้พลังงาน”</b> จากผู้ประกอบการโดยตรง ของการดำเนินงานโครงการ <b>“โครงการพัฒนาและรับรองมาตรฐานการใช้พลังงานที่มีประสิทธิภาพของผลิตภัณฑ์ ลดใช้พลังงาน”</b></li>
+<li>รายละเอียดแบบสำรวจข้อมูลจะประกอบไปด้วย 5 ส่วนที่สำคัญได้แก่<div class="parts"><b>ส่วนที่ 1</b> ข้อมูลเบื้องต้นของผู้ประกอบการ<br><b>ส่วนที่ 2</b> ข้อมูลมาตรฐานของผู้ประกอบการ (แนบสำเนาเอกสารการที่ได้รับมาตรฐาน)<br><b>ส่วนที่ 3</b> ข้อมูลกระบวนการผลิตและการใช้พลังงานในสถานประกอบการ<br><b>ส่วนที่ 4</b> ข้อมูลค่าใช้จ่ายด้านพลังงานของกระบวนการผลิต<br><b>ส่วนที่ 5</b> ข้อมูลการจัดการของเสียที่เกิดขึ้นในกระบวนการผลิต</div></li>
+<li>กรุณากรอกแบบสอบถามให้ครบทุกข้อ และโปรดทำเครื่องหมายถูก (√) ในช่อง <span class="ck"></span>ที่เป็นข้อมูลจริงของสถานประกอบการ</li></ol></div><hr class="sep">
+<div class="st"><u>ส่วนที่ 1 ข้อมูลเบื้องต้นของผู้ประกอบการ</u></div>
+<table class="ft t1"><colgroup><col style="width:5%"><col style="width:27%"><col style="width:14%"><col style="width:9%"><col style="width:9%"><col style="width:14%"><col style="width:11%"><col style="width:11%"></colgroup>
+<tr><td>1.1</td><td>ชื่อ-สกุล ผู้ให้ข้อมูล (${ttl(f.title)})</td><td colspan="6" class="c val">${v(f.name)}</td></tr>
+<tr><td rowspan="2">1.2</td><td rowspan="2">ประเภทสถานประกอบการ</td><td colspan="2">${ck(f.type==='วิสาหกิจชุมชน')}วิสาหกิจชุมชน</td><td colspan="2">${ck(f.type==='กลุ่มเกษตรกร')}กลุ่มเกษตรกร</td><td colspan="2">${ck(f.type==='อื่นๆ')}อื่นๆ <span class="val">${v(f.typeOther)}</span></td></tr>
+<tr><td colspan="2">จำนวนสมาชิก</td><td colspan="2" class="c val">${nv(f.members)}</td><td colspan="2">คน</td></tr>
+<tr><td>1.3</td><td>ชื่อสถานประกอบการที่จดทะเบียน</td><td colspan="6" class="val">${v(f.shop)}</td></tr>
+<tr><td></td><td>ผลิตภัณฑ์หลักในการขอมาตรฐาน “ผลิตภัณฑ์ชุมชน ลดใช้พลังงาน”</td><td colspan="6" class="val">${v(f.product)}</td></tr>
+<tr><td rowspan="4">1.4</td><td rowspan="4">ที่อยู่</td>${a('บ้านเลขที่','house')}${a('หมู่ที่','moo')}</tr>
+<tr>${a('หมู่บ้าน','village')}${a('ตำบล','tambon')}</tr><tr>${a('อำเภอ','amphoe')}${a('จังหวัด','province')}</tr><tr>${a('รหัสไปรษณีย์','zip')}${a('เบอร์โทรศัพท์','phone')}</tr>
+<tr><td>1.5</td><td>ตำแหน่งที่ตั้งตามพิกัด GPS</td>${a('ละติจูด','lat')}${a('ลองติจูด','lng')}</tr>
+<tr><td rowspan="4">1.6</td><td rowspan="4">ช่วงระยะเวลาการทำงาน หรือการผลิต</td><td colspan="2">${ck(f.period==='ตลอดปี')}ตลอดปี</td><td colspan="2">${ck(f.period==='บางช่วงเวลา')}บางช่วงเวลา ระบุเดือน</td><td colspan="2" class="val">${v(f.periodMonths)}</td></tr>
+<tr><td>ความสม่ำเสมอ</td><td colspan="2">${ck(f.reg==='ตามออเดอร์')}ตามออเดอร์</td><td colspan="3">${ck(f.reg==='เป็นประจำ')}เป็นประจำ</td></tr>
+<tr><td colspan="4" class="c">จำนวนวันที่ทำการผลิตต่อเดือน</td><td class="c val">${nv(f.daysMonth)}</td><td class="c">วัน</td></tr>
+<tr><td colspan="4" class="c">จำนวนเดือนที่ทำการผลิตต่อปี</td><td class="c val">${nv(f.monthsYear)}</td><td class="c">เดือน</td></tr>
+<tr><td>1.7</td><td>ปริมาณการผลิตต่อปี</td><td colspan="2" class="c val">${nv(f.kgYear)}</td><td class="c">กก./ปี</td><td class="c">เฉลี่ยต่อเดือน</td><td class="c val">${nv(f.kgMonth)}</td><td class="c">กก./เดือน</td></tr>
+<tr><td rowspan="2">1.8</td><td rowspan="2">ปริมาณการผลิต 1 รอบการผลิต</td><td colspan="4">1.8.1 ปริมาณการผลิตต่อ 1 รอบการผลิต</td><td class="c val">${nv(f.kgRound)}</td><td class="c">กก./รอบ</td></tr>
+<tr><td colspan="4">1.8.2 ปริมาณการผลิตต่อวัน</td><td class="c val">${nv(f.kgDay)}</td><td class="c">กก./วัน</td></tr></table>
+${has(f.note1)?`<div class="c val">${v(f.note1)}</div>`:''}`)}
+
+function pg2(d){const f=d.f,t=d.t,B=PTY(d).bag;
+ const sz=t.sizes.map((r,i)=>`<tr><td>${i+1}. น้ำหนัก</td><td class="c val">${nv(r.w)}</td><td>${r.u==='kg'?'กก./'+B:'กรัม/'+B}</td><td>จำนวน</td><td class="c val">${nv(r.q)}</td><td>${B}</td><td>ราคา</td><td class="c val">${nv(r.p)}</td><td>บาท/${B}</td></tr>`).join('');
+ return page(2,`<table class="ft"><tr><td colspan="9"><b>1.9</b> ปริมาณการจำหน่ายผลิตภัณฑ์จำแนกตามขนาดต่อเดือน</td></tr>${sz}</table>
+<table class="ft"><colgroup><col style="width:27%"><col></colgroup>
+<tr><td><b>1.10</b> ช่องทางการจัดจำหน่ายสินค้า</td><td>1. ${dl(v(f.ch1),90)}<br>2. ${dl(v(f.ch2),90)}</td></tr>
+<tr><td><b>1.11</b> อายุการเก็บรักษาสินค้า (Shelf Life)</td><td><span class="val">${v(f.shelf)}</span> ${has(f.shelfU)?`<span class="val">${v(f.shelfU)}</span>`:'เดือน / ปี'} &nbsp;&nbsp; วิธีการเก็บรักษา ${dl(v(f.storage),70)}</td></tr>
+<tr><td><b>1.12</b> เงื่อนไขการจำหน่าย<br>(ตอบได้มากกว่า 1 ข้อ)</td><td><div class="cg2"><div>${ck(f.c12_sell)}ขายขาด</div><div>${ck(f.c12_sellret)}ขายขาดแบบมีเงื่อนไขคืนสินค้า</div><div>${ck(f.c12_cons)}ฝากขาย</div><div>${ck(f.c12_consg)}ฝากขายแบบการันตียอด</div><div>${ck(f.c12_oem)}รับจ้างผลิต (OEM)</div></div></td></tr>
+<tr><td><b>1.13</b> การให้เครดิตแก่ผู้ซื้อ</td><td>${dl(nv(f.credit),18)} วัน &nbsp;&nbsp; อื่นๆ (โปรดระบุ) อาทิ ชำระทันที ${dl(v(f.creditOther),50)}</td></tr>
+<tr><td><b>1.14</b> การรับประกัน/เงื่อนไขการรับผิดชอบสินค้า<br>(ตอบได้มากกว่า 1 ข้อ)</td><td><div class="cg2"><div>${ck(f.c14_none)}ไม่มีการรับประกัน</div><div>${ck(f.c14_ins)}รับประกันสินค้า กรณีสินค้าเสียหาย/ชำรุด</div><div>${ck(f.c14_exch)}รับเปลี่ยนสินค้า กรณีสินค้าเสียหาย/ชำรุด</div><div>${ck(f.c14_ret)}รับคืนสินค้า กรณีสินค้าเสียหาย/ชำรุด</div><div>${ck(f.c14_resp)}รับผิดชอบกรณีสินค้าไม่ตรงตามที่สั่งซื้อ</div><div>${ck(f.c14_other)}อื่นๆ (ระบุ) <span class="val">${v(f.c14_otherTxt)}</span></div></div>
+<div style="margin-top:1.5mm">รายละเอียดการรับประกัน/ระยะเวลา/เงื่อนไขเพิ่มเติม (ระบุ) ${dl(v(f.c14_detail),80)}</div></td></tr>
+<tr><td><b>1.15</b> ข้อมูลฉลากผลิตภัณฑ์</td><td>ติด/แสดงฉลากผลิตภัณฑ์ &nbsp; ${ck(f.label==='มี')}มี &nbsp;&nbsp; ${ck(f.label==='ไม่มี')}ไม่มี (ข้ามไปตอบข้อ 1.16)<div style="margin:1mm 0"><b>รายละเอียดบนฉลากผลิตภัณฑ์ที่แสดง</b> (ทำเครื่องหมาย √ ลงในหน้าข้อความที่ตรงกับความเป็นจริง)</div>
+<div class="cg2"><div>${ck(f.l15_name)}ชื่อ/ที่อยู่ผู้ผลิต</div><div>${ck(f.l15_net)}ปริมาณสุทธิ</div><div>${ck(f.l15_date)}วันผลิต / วันหมดอายุ หรือ ควรบริโภคก่อน</div><div>${ck(f.l15_ing)}ส่วนประกอบที่สำคัญ</div><div>${ck(f.l15_reg)}เลขสารบบ/เลขทะเบียน/เครื่องหมายรับรองที่เกี่ยวข้อง</div><div>${ck(f.l15_store)}วิธีเก็บรักษา</div></div></td></tr>
+<tr><td><b>1.16</b> ความพร้อมในการวางจำหน่ายผ่านเครือข่ายพันธมิตร</td><td>${ck(f.ready==='มีความพร้อม')}มีความพร้อม<br>${ck(f.ready==='ต้องปรับปรุง/พัฒนาก่อน')}ต้องปรับปรุง/พัฒนาก่อน<br>ส่วนที่ต้องปรับปรุง/พัฒนา (โปรดระบุ) ${dl(v(f.readyTxt),80)}</td></tr></table>`)}
+
+function pg3(d){const t=d.t,std=PTY(d).std;
+ const lay=d.layout.map(it=>`<div class="li ${it.shape}" style="left:${it.x}%;top:${it.y}%;width:${it.w}%;height:${it.h}%"><span>${esc(it.label||'')}</span></div>`).join('');
+ const rows=std.map((s,i)=>{const r=t.std[i]||{};return `<tr style="height:${std.length>4?12.5:15}mm"><td class="c">${i+1}</td><td class="c">${s.other?'':`<span class="bdg">${s.b}</span>`}</td><td>${ck(r.on)}${s.other?'อื่นๆ (โปรดระบุ) <span class="val">'+v(r.x)+'</span>':s.n}${s.stars?`<br>จำนวนดาว ${dl(nv(d.f.otopStars),18)} ดวง`:''}</td><td class="c val">${v(r.no)}</td><td class="c val">${v(r.date)}</td></tr>`}).join('');
+ return page(3,`<div class="st">1.17 &nbsp;แผนผังสถานประกอบการ (ตำแหน่งอาคาร / เครื่องจักร / อุปกรณ์ที่สำคัญ)</div><div class="laybox">${lay}</div>
+<div><b><u>หมายเหตุ</u></b> : ถ่ายรูปภาพสถานประกอบการ อุปกรณ์ เครื่องจักรประกอบการสำรวจ</div>
+<div class="st"><u>ส่วนที่ 2 ข้อมูลมาตรฐานของผู้ประกอบการ</u></div><div style="margin-bottom:1.5mm">เครื่องหมายรับรองมาตรฐานของผลิตภัณฑ์ที่ได้รับอนุญาต (แนบภาพถ่ายเอกสารการที่ได้รับมาตรฐาน)</div>
+<table class="ft"><colgroup><col style="width:9%"><col style="width:14%"><col style="width:33%"><col style="width:22%"><col style="width:22%"></colgroup><tr><th>ลำดับที่</th><th>ตราสัญลักษณ์</th><th>มาตรฐานผลิตภัณฑ์ที่ได้รับ</th><th>เลขทะเบียน</th><th>วัน/เดือน/ปี ที่ได้รับอนุญาต</th></tr>${rows}</table>`)}
+
+function pg4(d){const f=d.f,P=PTY(d);return page(4,`<div class="st"><u>ส่วนที่ 3 ข้อมูลกระบวนการผลิต</u></div><div>แผนผังแสดงลำดับขั้นตอนกระบวนการผลิต${P.name}</div>
+<div class="flowbox"><div class="fb head">กระบวนการผลิต${P.name}</div>${P.flow.map(x=>`<div class="arr"></div><div class="frow">${ck(f[x.k])}<div class="fb"><b>${x.t}</b><br>ตย.เทคโนโลยี/วิธีการ : ${x.s}</div></div>`).join('')}
+${has(f.processNote)?`<div class="fnote val">${v(f.processNote).replace(/\n/g,'<br>')}</div>`:''}</div>
+<div><b><u>หมายเหตุ</u></b> : โปรดทำเครื่องหมายถูก (√) ในช่อง <span class="ck"></span>ที่เป็นข้อมูลจริงของสถานประกอบการ<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;โปรดระบุรายละเอียดลำดับขั้นตอนการผลิตในแต่ละส่วนตั้งแต่การจัดเตรียมวัตถุดิบ กระบวนการผลิต ไปจนถึงผลิตภัณฑ์ที่ได้ ทั้งนี้สามารถเพิ่มเติมรายละเอียดของกระบวนการผลิตได้ตามข้อมูลจริง ที่ได้จากการสำรวจ</div>`)}
+
+const NONE=b=>b?'&nbsp;&nbsp;<span class="val" style="font-size:13pt;margin-left:6mm">ไม่มี</span>':'';
+const RD_=(TT,k,i)=>TT[k].rows[i]||{free:1};
+const pre=(def,r,k)=>has(r[k])?`<span class="val">${nv(r[k])}</span>`:((def.pre&&def.pre[k])||'');
+
+function pg5(d){const f=d.f,t=d.t,TT=T(d),L=PTY(d).L;
+ const r32=t.raw32.map((r,i)=>{const def=RD_(TT,'raw32',i);return `<tr><td class="c">${i+1}</td><td>${rn(def,r)}</td><td class="c val">${nv(r.q)}</td><td class="c ${has(r.u)?'val':''}">${has(r.u)?v(r.u):(def.free?'':'กก.')}</td><td class="val">${v(r.note)}</td></tr>`}).join('');
+ const r331=t.tech331.map((r,i)=>`<tr><td class="c">${i+1}</td><td>${rn(RD_(TT,'tech331',i),r)}</td><td class="c val">${nv(r.cnt)}</td><td class="c val">${nv(r.kw)}</td><td class="c val">${nv(r.cap)}</td><td class="c val">${nv(r.rate)}</td></tr>`).join('');
+ return page(5,`<div class="st">3.1 &nbsp;ปริมาณการผลิตต่อ 1 รอบการผลิต</div><div class="bl">• ${L.s31} ${dl(nv(f.s31))} กก./รอบ ${has(f.s31note)?`&nbsp; <span class="val">(${v(f.s31note)})</span>`:''}</div>
+<div class="st">3.2 &nbsp;วัตถุดิบหลักที่ใช้ในกระบวนการผลิต (ต่อ 1 รอบการผลิต)</div>
+<div style="display:flex;gap:5mm;align-items:flex-start"><table class="ft" style="width:68%"><colgroup><col style="width:9%"><col style="width:28%"><col style="width:14%"><col style="width:12%"><col></colgroup><tr><th rowspan="2">ลำดับ</th><th rowspan="2">รายละเอียดวัตถุดิบ</th><th colspan="2">ปริมาณที่ใช้ต่อรอบการผลิต</th><th rowspan="2">หมายเหตุ</th></tr><tr><th>จำนวน</th><th>หน่วย</th></tr>${r32}</table>${has(f.noteRaw)?`<div class="val" style="padding-top:22mm">${v(f.noteRaw)}</div>`:''}</div>
+<div class="st">3.3 &nbsp;การติดตั้ง และการใช้งานเทคโนโลยีพลังงานใน<u>กระบวนการเตรียมวัตถุดิบ</u>${NONE(f.prepNone)}</div>
+<div class="bl">3.3.1 การติดตั้งเทคโนโลยีใน<u>กระบวนการเตรียมวัตถุดิบ</u> <i>(เฉพาะอุปกรณ์ เทคโนโลยี หรือเครื่องจักรที่<u>มีการใช้พลังงาน</u>)</i></div>
+<table class="ft" style="width:58%"><colgroup><col style="width:9%"><col style="width:27%"><col><col><col><col></colgroup><tr><th rowspan="3">ลำดับ</th><th rowspan="3">รายละเอียดเทคโนโลยี</th><th colspan="4">การติดตั้งและคุณสมบัติของเทคโนโลยี</th></tr><tr><th colspan="4">รายละเอียดเครื่องจักร</th></tr><tr><th>จำนวน<br>(เครื่อง)</th><th>กำลังไฟฟ้า<br>(kW)</th><th>ความจุ<br>(ลิตร)</th><th>อัตราการทำงาน<br>(กก./ชม.)</th></tr>${r331}</table>`,1)}
+
+function sec332(d){const f=d.f,t=d.t,c=calc(d),TT=T(d),N=t.raw332.length,L=PTY(d).L;
+ const rows=t.raw332.map((r,i)=>`<tr><td class="c">${i+1}</td><td>${rn(RD_(TT,'raw332',i),r)}</td><td class="c val">${nv(r.q)}</td><td class="c val">${v(r.u)}</td>${i===0?[nv(f.p332dur),has(f.p332dur)?v(f.p332du):'',has(f.p332dur)?pc(c.p332h):'',nv(f.p332kw),has(f.p332kw)&&has(f.p332dur)?pc(c.p332kwh):'',nv(f.p332yield),v(f.p332yu)].map(x=>`<td rowspan="${N}" class="top val">${x}</td>`).join(''):''}</tr>`).join('');
+ return `<div class="bl" style="margin-left:4mm"><b>3.3.2</b> การใช้งานเทคโนโลยีใน<u>กระบวนการเตรียมวัตถุดิบ</u></div><div class="bl" style="margin-left:12mm">• ${L.p332out} ${dl(nv(f.p332out))} กก./รอบ</div>
+<table class="ft sm"><colgroup><col style="width:4.5%"><col style="width:17%"><col><col><col><col style="width:9%"><col><col><col><col><col></colgroup>
+<tr><th rowspan="2">ลำดับ</th><th rowspan="2">วัตถุดิบที่ใช้</th><th colspan="2">ปริมาณวัตถุดิบ (ต่อรอบ)</th><th colspan="3">ระยะเวลาใช้งาน (ต่อรอบ)</th><th colspan="2">อุปกรณ์ไฟฟ้า<br>ระบุ <span class="val">${v(f.p332dev)||'..............'}</span></th><th colspan="2">ปริมาณที่ได้ต่อรอบ</th></tr>
+<tr><th>ปริมาณ</th><th>หน่วย</th><th>ระยะเวลา</th><th>หน่วย<br><small>(นาที,วินาที,ชม.)</small></th><th>คิดเป็น<br>จำนวน ชม.</th><th>kW</th><th>kWh/รอบ</th><th>ปริมาณ</th><th>หน่วย</th></tr>${rows}</table>`}
+
+function pg6(d){const t=d.t,TT=T(d);
+ const r341=t.stove341.map((r,i)=>`<tr><td class="c">${i+1}</td><td>${rn(RD_(TT,'stove341',i),r)}</td>${['sc','ss','pt','pc','ps','pv','mc','mkw','mv','mr'].map(k=>`<td class="c val">${nv(r[k])}</td>`).join('')}</tr>`).join('');
+ return page(6,`${sec332(d)}
+<div class="st">3.4 &nbsp;การติดตั้งและการใช้งานเทคโนโลยีพลังงานใน<u>กระบวนการปิ้งขนมทองม้วน</u></div><div class="bl"><b>3.4.1</b> การติดตั้งเทคโนโลยีใน<u>กระบวนการปิ้งขนมทองม้วน</u></div>
+<table class="ft sm"><colgroup><col style="width:4.5%"><col style="width:15%"></colgroup><tr><th rowspan="3">ลำดับ</th><th rowspan="3">รายละเอียดเทคโนโลยี</th><th colspan="10">การติดตั้งและคุณสมบัติของเทคโนโลยี</th></tr><tr><th colspan="2">รายละเอียดเตา</th><th colspan="4">รายละเอียดภาชนะ</th><th colspan="4">รายละเอียดเครื่องจักร</th></tr>
+<tr><th>จำนวน<br>(เตา)</th><th>ขนาด<br>ก×ย×ส (ม.)</th><th>ชนิดภาชนะ</th><th>จำนวนภาชนะ<br>(ใบ)</th><th>ขนาดภาชนะ<br>ก×ย×ส (ม.)</th><th>ความจุ<br>(ลิตร)</th><th>จำนวน<br>(เครื่อง)</th><th>กำลังไฟฟ้า<br>(kW)</th><th>ความจุ<br>(ลิตร)</th><th>อัตราการทำงาน<br>(กก./ชม.)</th></tr>${r341}</table>`,1)}
+
+function sec35(d){const f=d.f,t=d.t,TT=T(d),L=PTY(d).L;
+ const r35=t.m35.map((r,i)=>`<tr style="height:8mm"><td class="c">${i+1}</td><td>${rn(RD_(TT,'m35',i),r)}</td><td class="c val">${v(r.fn)}</td><td class="c val">${nv(r.kw)}</td><td class="c val">${nv(r.h)}</td></tr>`).join('');
+ return `<div class="st" style="margin-top:3mm">3.5 &nbsp;เครื่องจักร หรืออุปกรณ์อื่นๆ เพิ่มเติมในสถานประกอบการ <i style="font-weight:400">(เฉพาะอุปกรณ์ เทคโนโลยี หรือเครื่องจักรที่<u>มีการใช้พลังงาน</u>)</i></div>
+<div class="bl" style="margin-left:12mm">• ${L.p35in} ${dl(nv(f.p35in))} กก./รอบ<br>• ${L.p35out} ${dl(nv(f.p35out))} กก./รอบ</div>
+<table class="ft" style="width:57%"><colgroup><col style="width:8%"><col style="width:24%"><col style="width:28%"><col><col></colgroup><tr><th>ลำดับ</th><th>รายการ</th><th>หน้าที่หลัก</th><th>ขนาดกำลังไฟฟ้า<br>(kW)</th><th>ระยะเวลาในการใช้งาน<br>(ชั่วโมง/รอบ)</th></tr>${r35}</table>`}
+
+function pg7(d){const f=d.f,t=d.t,c=calc(d),TT=T(d);
+ const r342=t.r342.map((r,i)=>`<tr><td class="c">${i+1}</td><td>${rn(RD_(TT,'r342',i),r)}</td><td class="c val">${nv(r.q)}</td><td class="c val">${v(r.u)}</td><td class="c val">${nv(r.dur)}</td><td class="c val">${has(r.dur)?v(r.du||'นาที'):''}</td><td class="c val">${has(r.dur)?pc(c.r342[i].h):''}</td><td class="c val">${v(r.bt)}</td><td class="c val">${nv(r.bkg)}</td><td class="c val">${nv(r.lpg)}</td><td class="c val">${nv(r.kw)}</td><td class="c val">${has(r.kw)&&has(r.dur)?pc(c.r342[i].kwh):''}</td></tr>`).join('');
+ return page(7,`<div class="bl" style="margin-left:4mm"><b>3.4.2</b> ลักษณะของภาชนะที่ใช้ใน<u>กระบวนการปิ้ง/อบขนมทองม้วน</u></div>
+<div class="bl" style="margin-left:12mm">• ปริมาณวัตถุดิบจากกระบวนการเตรียมวัตถุดิบที่ใช้ ${dl(nv(f.p342in))} กก./รอบ<br>• ปริมาณขนมทองม้วนที่ได้ ${dl(nv(f.p342out))} กก./รอบ</div>
+<table class="ft sm"><colgroup><col style="width:4.5%"><col style="width:15%"></colgroup><tr><th rowspan="2">ลำดับ</th><th rowspan="2">วัตถุดิบที่ใช้</th><th colspan="2">ปริมาณวัตถุดิบ (ต่อรอบ)</th><th colspan="3">ระยะเวลาใช้งาน (ต่อรอบ)</th><th colspan="2">เตาชีวมวล</th><th rowspan="2">ก๊าซหุงต้ม<br>(LPG)<br>กิโลกรัมต่อรอบ</th><th colspan="2">อุปกรณ์ไฟฟ้า</th></tr>
+<tr><th>ปริมาณ</th><th>หน่วย</th><th>ระยะเวลา</th><th>หน่วย<br><small>(นาที,วินาที,ชม.)</small></th><th>คิดเป็น<br>จำนวน ชม.</th><th>ประเภทชีวมวล</th><th>กก.ต่อรอบ</th><th>kW</th><th>kWh/รอบ</th></tr>${r342}</table>${sec35(d)}`,1)}
+
+const SEC4H=`<div class="st"><u>ส่วนที่ 4</u> ข้อมูลค่าใช้จ่ายด้านพลังงานของกระบวนการผลิต</div>`;
+function sec41(d){const f=d.f,t=d.t,TT=T(d);const b=t.bio41.map((r,i)=>`<tr><td class="c">${i+1}</td><td>${rn(RD_(TT,'bio41',i),r)}</td><td class="c val">${nv(r.kg)}</td><td class="c val">${nv(r.price)}</td><td class="c val">${v(r.src)}</td></tr>`).join('');
+ return `<div class="st">4.1 &nbsp;ค่าใช้จ่ายพลังงานชีวมวล${NONE(f.bioNone)}</div><table class="ft" style="width:56%"><colgroup><col style="width:8%"><col style="width:27%"><col><col><col></colgroup><tr><th>ลำดับ</th><th>ประเภทเชื้อเพลิง</th><th>ปริมาณที่ใช้<br>(กก./รอบ)</th><th>ราคาต่อหน่วยของเชื้อเพลิง<br>(บาท/กก.)</th><th>แหล่งที่มาของเชื้อเพลิง<br>(ระบุสถานที่)</th></tr>${b}</table>`}
+function sec42(d){const f=d.f,t=d.t,TT=T(d);const l=t.lpg42.map((r,i)=>`<tr><td class="c">${i+1}</td><td>${i===2?`อื่นๆ (ระบุ) <span class="val">${has(r.x)?'ถัง '+v(r.x)+' กก.':''}</span>`:TT.lpg42.rows[i].n}</td><td class="c val">${nv(r.kg)}</td><td class="c val">${nv(r.price)}</td></tr>`).join('');
+ return `<div class="st">4.2 &nbsp;ค่าใช้จ่ายก๊าซหุงต้ม${NONE(f.lpgNone)}</div><table class="ft" style="width:39%"><colgroup><col style="width:12%"><col style="width:46%"><col><col></colgroup><tr><th>ลำดับ</th><th>ประเภทเชื้อเพลิง</th><th>ปริมาณที่ใช้<br>(กก./รอบ)</th><th>ราคา LPG<br>(บาท/ถัง)</th></tr>${l}</table>`}
+function sec43(d){const t=d.t,TT=T(d);const e=t.el43.map((r,i)=>`<tr><td class="c">${i+1}</td><td>${rn(RD_(TT,'el43',i),r)}</td><td class="c val">${nv(r.unit)}</td><td class="c val">${nv(r.baht)}</td></tr>`).join('');
+ return `<div class="st">4.3 &nbsp;ค่าใช้จ่ายพลังงานไฟฟ้า</div><table class="ft" style="width:62%"><colgroup><col style="width:8%"><col style="width:22%"><col><col></colgroup><tr><th>ลำดับ</th><th>แหล่งพลังงานไฟฟ้า</th><th>ปริมาณการใช้ไฟฟ้าเฉลี่ยต่อเดือน (หน่วย/เดือน)</th><th>ค่าไฟฟ้าเฉลี่ยต่อเดือน (บาท/เดือน)</th></tr>${e}</table>`}
+function sec5(d){const f=d.f,t=d.t,TT=T(d);
+ const w=t.waste5.map((r,i)=>`<tr><td class="c">${i+1}</td><td>${rn(RD_(TT,'waste5',i),r)}</td><td class="c val">${has(r.w)?nv(r.w)+' kg.':''}</td><td class="c val">${nv(r.fin)}</td><td class="c val">${r.use==='มี'?'✓':''}</td><td class="c val">${r.use==='ไม่มี'?'✓':''}</td><td class="val">${v(r.det)}</td></tr>`).join('');
+ return `<div class="st"><u>ส่วนที่ 5</u> ข้อมูลการจัดการของเสียที่เกิดขึ้นในกระบวนการผลิต${NONE(f.wasteNone)}</div><div style="margin-bottom:1mm">โปรดระบุประเภท / ชนิด ของเสียที่เกิดขึ้นจากกระบวนการผลิต</div>
+<table class="ft"><colgroup><col style="width:4.5%"><col style="width:24%"><col style="width:11%"><col style="width:13%"><col style="width:7%"><col style="width:7%"><col></colgroup><tr><th rowspan="2">ลำดับ</th><th rowspan="2">รายละเอียดของเสีย</th><th colspan="2">ปริมาณ (กก.)</th><th colspan="2">การใช้ประโยชน์จากของเสีย</th><th rowspan="2">ระบุการใช้ประโยชน์</th></tr><tr><th>ของเสีย</th><th>ผลิตภัณฑ์สุดท้ายที่ได้</th><th>มี</th><th>ไม่มี</th></tr>${w}</table>
+<div style="font-size:9pt">*ตัวอย่างการนำไปใช้ประโยชน์ ${PTY(d).L.wasteEx}</div>`}
+const sigBlock=d=>`<div class="sig" style="margin-top:5mm">ลงนาม ${dl('',55)} ผู้บันทึกข้อมูล<br>(${ttl(d.f.recTitle)} ${dl(v(d.f.recName),50)})<br>เบอร์โทรศัพท์ติดต่อ ${dl(v(d.f.recPhone),48)}</div>`;
+const photoList=()=>`<div class="st c" style="margin-top:2mm">รูปประกอบการเก็บข้อมูลที่ต้องแนบกับแบบฟอร์มเก็บข้อมูล</div><table class="ft" style="width:52%;margin:0 auto"><colgroup><col style="width:12%"><col><col style="width:28%"></colgroup><tr><th>ลำดับ</th><th>รูปที่ต้องแนบส่ง</th><th>จำนวนรูป (ไม่น้อยกว่า)</th></tr>${PH.map((p,i)=>`<tr><td class="c">${i+1}</td><td>${p.n}</td><td class="c">${p.m}</td></tr>`).join('')}</table>`;
+function pg8(d){return page(8,SEC4H+sec41(d)+sec42(d)+sec43(d),1)}
+function pg9(d){return page(9,sec5(d)+sigBlock(d)+photoList(),1)}
+
+/* ----- ลูกประคบ (หน้า 6–10) ----- */
+function lp6(d){const t=d.t,TT=T(d);
+ const r=t.dry341.map((x,i)=>{const def=RD_(TT,'dry341',i);return `<tr><td class="c">${i+1}</td><td>${rn(def,x)}</td><td class="c">${pre(def,x,'w')}</td><td class="c">${pre(def,x,'l')}</td><td class="c val">${nv(x.cnt)}</td><td class="c val">${nv(x.age)}</td></tr>`}).join('');
+ return page(6,`${sec332(d)}
+<div class="st">3.4 &nbsp;การติดตั้ง และการใช้งานเทคโนโลยีพลังงานใน<u>กระบวนการตากสมุนไพร</u></div><div class="bl"><b>3.4.1</b> การติดตั้งเทคโนโลยีใน<u>กระบวนการตากสมุนไพร</u></div>
+<table class="ft" style="width:66%"><colgroup><col style="width:7%"><col style="width:45%"><col><col><col><col></colgroup><tr><th rowspan="2">ลำดับ</th><th rowspan="2">รายละเอียดอุปกรณ์</th><th colspan="2">ขนาด (ม.)</th><th>จำนวน</th><th>อายุใช้งาน</th></tr><tr><th>กว้าง</th><th>ยาว</th><th>(หลัง)</th><th>(เดือน)</th></tr>${r}</table>`,1)}
+function lp7(d){const f=d.f,t=d.t,TT=T(d),c=calc(d);
+ const r2=t.tray342.map((x,i)=>{const a=c.tray342[i];return `<tr><td class="c">${i+1}</td><td>${rn(RD_(TT,'tray342',i),x)}</td><td class="c val">${nv(x.w)}</td><td class="c val">${nv(x.l)}</td><td class="c val">${a.area?fmt(a.area,4):''}</td><td class="c val">${nv(x.cnt)}</td><td class="c val">${a.tarea?fmt(a.tarea,4):''}</td><td class="c val">${nv(x.age)}</td></tr>`}).join('');
+ const r3=t.dry343.map((x,i)=>`<tr><td class="c">${i+1}</td><td>${rn(RD_(TT,'dry343',i),x)}</td>${['wb','area','hd','days','wa','temp','hum','heat','kw'].map(k=>`<td class="c val">${nv(x[k])}</td>`).join('')}<td class="c val">${has(x.kw)&&has(x.hd)?pc(c.dry343[i].kwh):''}</td></tr>`).join('');
+ return page(7,`<div class="bl" style="margin-left:4mm"><b>3.4.2</b> ลักษณะของภาชนะที่ใช้ใน<u>กระบวนการตากแห้งสมุนไพร</u></div>
+<table class="ft sm" style="width:80%"><colgroup><col style="width:5%"><col style="width:30%"></colgroup><tr><th rowspan="2">ลำดับ</th><th rowspan="2">ลักษณะของภาชนะ</th><th colspan="3">ขนาดของภาชนะ (ม.)</th><th colspan="2">จำนวนใช้งาน (อัน)</th><th>อายุใช้งาน</th></tr><tr><th>กว้าง</th><th>ยาว</th><th>พื้นที่ (ตร.ม.)</th><th>อันต่อรอบ</th><th>พื้นที่ (ตร.ม.)</th><th>(เดือน)</th></tr>${r2}</table>
+<div class="bl" style="margin-left:4mm"><b>3.4.3</b> การใช้งานเทคโนโลยีพลังงานใน<u>กระบวนการตากแห้งสมุนไพร</u></div>
+<div class="bl" style="margin-left:12mm">• ปริมาณวัตถุดิบจากกระบวนการเตรียมวัตถุดิบที่ใช้ ${dl(nv(f.p343in))} กก./รอบ<br>• ปริมาณสมุนไพรตากแห้งทั้งหมดที่ได้ ${dl(nv(f.p343out))} กก./รอบ</div>
+<table class="ft sm"><colgroup><col style="width:4%"><col style="width:17%"></colgroup><tr><th rowspan="2">ลำดับ</th><th rowspan="2">วัตถุดิบที่ใช้</th><th rowspan="2">นน.วัตถุดิบ<br>“ก่อน”<br>ตากแห้ง<br>(กก./รอบ)</th><th rowspan="2">พื้นที่ตากแห้ง<br>จริง<br>(ตร.ม.)</th><th colspan="2">ระยะเวลาในการตากแห้ง</th><th rowspan="2">นน.วัตถุดิบ<br>“หลัง”<br>ตากแห้ง<br>(กก./รอบ)</th><th rowspan="2">อุณหภูมิ<br>(องศาเซลเซียส)</th><th rowspan="2">ความชื้น<br>(%)</th><th rowspan="2">ความร้อนเสริมที่ใช้ต่อรอบ<br>${ck(f.heatType==='ชีวมวล')}ชีวมวล <span class="val">${v(f.heatBio)}</span><br>${ck(f.heatType==='LPG')}LPG<br>(กก./รอบ)</th><th colspan="2">ไฟฟ้า</th></tr>
+<tr><th>ชม./วัน</th><th>จำนวนวัน</th><th>kW</th><th>kWh/รอบ</th></tr>${r3}</table>`,1)}
+function lp8(d){return page(8,sec35(d)+SEC4H+sec41(d)+sec42(d),1)}
+function lp9(d){return page(9,sec43(d)+sec5(d)+sigBlock(d),1)}
+function lp10(d){return page(10,photoList(),1)}
+
+function photoPages(d){const all=[];PH.forEach(p=>(d.photos[p.k]||[]).forEach(x=>all.push({...x,cat:p.n})));if(!all.length)return '';
+ const pp=[];for(let i=0;i<all.length;i+=6)pp.push(all.slice(i,i+6));
+ return pp.map((g,pi)=>`<section class="pg"><div class="phd"><b>ภาพประกอบการเก็บข้อมูล — ${esc(d.f.shop||'')}</b><span>วันที่สำรวจ ${thDate(d.f.date)}</span></div><div class="pgrid">${g.map((x,j)=>`<figure><div class="pim"><img src="${x.src}" alt=""></div><figcaption><b>ภาพที่ ${pi*6+j+1}</b> ${esc(x.cat)}${x.cap?' — '+esc(x.cap):''}</figcaption></figure>`).join('')}</div><div class="pf"><span>กองส่งเสริมและพัฒนาพลังงานภูมิภาค กระทรวงพลังงาน</span><span>ภาพประกอบ ${pi+1} / ${pp.length}</span></div></section>`).join('')}
+
+function certAuto(){const f=cur.f;return{group:f.shop||'',collector:[f.recTitle,f.recName].filter(Boolean).join(''),cphone:f.recPhone||'',addr:[f.house,f.moo&&'ม.'+f.moo,f.tambon&&'ต.'+f.tambon,f.amphoe&&'อ.'+f.amphoe,f.province&&'จ.'+f.province].filter(Boolean).join(' '),name:[f.title,f.name].filter(Boolean).join(''),phone:f.phone||''}}
+function certPage(d){const f=d.f,a=certAuto(),g=(k,x)=>esc(has(f[k])?f[k]:x);
+ return `<section class="pg cert"><div class="certlogos">${S.logo?`<img src="${S.logo}" alt="">`:''}<div class="t">กองส่งเสริมและพัฒนา<br>พลังงานภูมิภาค<big>กระทรวงพลังงาน</big></div>${S.logo2?`<img src="${S.logo2}" alt="">`:has(S.partner)?`<div class="t"><big>${esc(S.partner)}</big></div>`:''}</div>
+<h2>ใบรับรอง</h2><div class="c" style="font-size:12pt">การเข้าพื้นที่สำรวจและเก็บรวบรวมข้อมูลกลุ่มแปรรูปผลิตภัณฑ์<br>ภายใต้ “โครงการพัฒนาและรับรองมาตรฐานการใช้พลังงานที่มีประสิทธิภาพของผลิตภัณฑ์ ลดใช้พลังงาน”</div>
+<div class="lines" style="width:70%;margin:6mm auto 0"><p>ณ ${dl(g('certGroup',a.group))}</p><p style="width:60%;margin-left:15%">วันที่ ${dl(thDate(f.certDate||f.date))}</p></div><div class="thick"></div>
+<div class="lines"><p>1) ชื่อผู้เก็บข้อมูล ${dl(g('certCollector',a.collector))} เบอร์โทรศัพท์ ${dl(g('certCollectorPhone',a.cphone),40)}</p><p>2) ชื่อกลุ่ม/สถานที่ตรวจวัด ${dl(g('certGroup',a.group))}</p><p>3) ที่อยู่/ที่ตั้ง ${dl(g('certAddr',a.addr))}</p><p>4) ชื่อผู้รับรอง (ประธานกลุ่ม,สมาชิกกลุ่ม) ${dl(g('certName',a.name))}</p><p>5) เบอร์โทรศัพท์ผู้รับรอง ${dl(g('certPhone',a.phone))}</p>
+<p style="margin-top:6mm;padding-left:12mm">ข้าพเจ้าขอรับรองว่า ผู้เก็บข้อมูล ${dl(g('certCollector',a.collector))}</p></div>
+<p style="font-size:12pt;line-height:2.2">ได้เข้าพื้นที่ เพื่อสำรวจและเก็บรวบรวมข้อมูลการใช้พลังงานในกระบวนการผลิต ตามรายละเอียดที่ระบุไว้มานี้</p>
+<p style="font-size:12pt;text-align:right;margin:8mm 10mm 14mm 0">ขอรับรองว่าเป็นความจริงทุกประการ</p>
+<div style="width:80mm;margin-left:auto;text-align:center;font-size:12pt;line-height:2.4">${dl('',70)}<br>( ${dl(g('certName',a.name),62)} )</div></section>`}
+
+function buildPrint(d){PDOC=d;let h='';if(S.pForm!==false)h+=PTY(d).pages().map(fn=>fn(d)).join('');if(S.pPhoto!==false)h+=photoPages(d);if(S.pCert!==false)h+=certPage(d);return h}
+async function openPreview(){await flush();const h=buildPrint(cur);if(!h)return toast('ยังไม่ได้เลือกส่วนที่จะพิมพ์');
+ $('#printRoot').innerHTML=`<div class="pvbar"><button class="btn" onclick="closePreview()">✕ ปิด</button><span>ตัวอย่างก่อนพิมพ์ · ${$$('.pg',(()=>{const t=document.createElement('div');t.innerHTML=h;return t})()).length} หน้า</span><button class="btn pri" onclick="doPrint()">🖨️ พิมพ์ / บันทึก PDF</button></div><div class="pages">${h}</div>`;
+ document.body.classList.add('preview');fitPages();autoFit();window.scrollTo(0,0)}
+function fitPages(){const w=window.innerWidth-16;$$('#printRoot .pg').forEach(p=>{p.style.zoom='';const pw=p.offsetWidth;p.style.zoom=pw>w?(w/pw).toFixed(3):''})}
+function closePreview(){document.body.classList.remove('preview');$('#printRoot').innerHTML='';renderEditor()}
+function doPrint(){const old=document.title;document.title=`แบบสำรวจ${PTY(cur).name}_${safe(cur.f.shop)}_${cur.f.date||''}`;$$('#printRoot .pg').forEach(p=>p.style.zoom='');autoFit();setTimeout(()=>{window.print();document.title=old;fitPages()},150)}
+window.addEventListener('resize',()=>{if(document.body.classList.contains('preview'))fitPages()});
+window.addEventListener('beforeprint',()=>$$('#printRoot .pg').forEach(p=>p.style.zoom=''));
+window.addEventListener('afterprint',()=>{if(document.body.classList.contains('preview'))fitPages()});
+
+/* ========== boot ========== */
+(async()=>{await DB.init();const s=await DB.get('settings');if(s)S=Object.assign(S,s);
+ if(!(await DB.get('seeded'))){await DB.put(sample());await DB.set('seeded',true)}
+ if(!(await DB.get('seeded_lp'))){await DB.put(sampleLP());await DB.set('seeded_lp',true)}
+ shops=(await DB.all()).map(norm);history.replaceState({v:'home'},'');render()})();
+</script>
+</body>
+</html>
