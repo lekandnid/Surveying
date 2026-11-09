@@ -78,7 +78,8 @@ main{max-width:880px;margin:0 auto;padding:12px 12px 110px}
 .empty{text-align:center;color:var(--mute);padding:40px 10px}
 .warnbox{border-radius:12px;padding:10px 12px;margin-bottom:8px;font-size:14px;display:flex;gap:10px;align-items:flex-start}
 .warnbox.warn{background:var(--warnbg);color:#7a3306}.warnbox.err{background:var(--errbg);color:#7a1a12}.warnbox.info{background:#eef4ff;color:#1e3a8a}
-.warnbox button{margin-left:auto;flex:none}
+.warnbox>button{margin-left:auto;flex:none}
+.fixrow{margin-top:6px}.fixrow .btn{font-size:13px;padding:7px 11px;text-align:left}
 .lay{position:relative;width:100%;aspect-ratio:1120/520;border:2px dashed #b8c2d3;border-radius:10px;background:#fbfcfe;touch-action:none;overflow:hidden;user-select:none;-webkit-user-select:none}
 .li{position:absolute;border:2px solid #2a4ea8;background:rgba(42,78,168,.06);display:flex;align-items:center;justify-content:center;text-align:center;color:#1a3a9c;font-weight:600;font-size:13px;padding:4px;cursor:move;line-height:1.25}
 .li.circle{border-radius:50%}
@@ -413,25 +414,25 @@ function calc(d){const f=d.f,t=d.t,c={};
  c.costKg=c.prodRound?c.costRound/c.prodRound:0;
  c.kwhKg=c.prodRound?c.kwhRound/c.prodRound:0;c.lpgKg=c.prodRound?c.lpgRound/c.prodRound:0;
  return c}
-function checks(d,c){const f=d.f,t=d.t,w=[],P=PTY(d),TT=T(d);const W=(lvl,step,msg)=>w.push({lvl,step,msg});
+function checks(d,c){const f=d.f,t=d.t,w=[],P=PTY(d),TT=T(d);const W=(lvl,step,msg,fix)=>w.push({lvl,step,msg,fix});const sv=x=>String(+(+x).toFixed(3));
  const req=[['date','วันที่สำรวจ','info'],['name','ชื่อผู้ให้ข้อมูล (1.1)','info'],['type','ประเภทสถานประกอบการ (1.2)','info'],['shop','ชื่อสถานประกอบการ (1.3)','info'],['house','บ้านเลขที่ (1.4)','info'],['tambon','ตำบล (1.4)','info'],['amphoe','อำเภอ (1.4)','info'],['province','จังหวัด (1.4)','info'],['phone','เบอร์โทรศัพท์ (1.4)','info'],['lat','พิกัด GPS (1.5)','info'],['daysMonth','วันที่ผลิตต่อเดือน (1.6)','info'],['kgRound','ปริมาณผลิตต่อรอบ (1.8.1)','info'],['recName','ชื่อผู้บันทึกข้อมูล','waste']];
  req.forEach(([k,l,s])=>{if(!has(f[k]))W('err',s,`ยังไม่กรอก ${l}`)});
  const ph=String(f.phone||'').replace(/\D/g,'');if(ph&&!/^0\d{8,9}$/.test(ph))W('warn','info',`เบอร์โทร ${f.phone} ไม่ครบ 9–10 หลัก`);
  if(has(f.lat)&&has(f.lng)){const la=num(f.lat),lo=num(f.lng);if(la<5.5||la>20.6||lo<97.3||lo>105.7)W('warn','info','พิกัด GPS อยู่นอกประเทศไทย — อาจสลับละติจูด/ลองติจูด')}
- if(num(f.kgMonth)&&num(f.kgYear)&&num(f.monthsYear)){const e=num(f.kgMonth)*num(f.monthsYear);if(Math.abs(e-num(f.kgYear))/num(f.kgYear)>.1)W('warn','info',`1.7 ต่อปี ${fmt(num(f.kgYear))} กก. ≠ ต่อเดือน × เดือน/ปี (${fmt(e)} กก.)`)}
- if(c.estMonth&&num(f.kgMonth)&&Math.abs(c.estMonth-num(f.kgMonth))/num(f.kgMonth)>.15)W('warn','info',`1.7 ต่อเดือน ${fmt(num(f.kgMonth))} กก. ≠ 1.8.2 ต่อวัน × วัน/เดือน (${fmt(c.estMonth)} กก.)`);
- t.sizes.forEach((r,i)=>{if(r.u==='kg'&&num(r.w)>5)W('warn','sales',`1.9 แถว ${i+1}: น้ำหนัก ${r.w} กก./${P.bags[i]||''} สูงผิดปกติ — น่าจะเป็นกรัม`)});
- if(c.salesKg&&num(f.kgMonth)){const ra=c.salesKg/num(f.kgMonth);if(ra<.7||ra>1.3)W('warn','sales',`ยอดจำหน่าย/เดือน (1.9) = ${fmt(c.salesKg)} กก. ไม่สอดคล้องกับผลิต/เดือน (1.7) = ${fmt(num(f.kgMonth))} กก.`)}
- if(num(f.s31)&&num(f.kgRound)&&Math.abs(num(f.s31)-num(f.kgRound))/num(f.kgRound)>.15)W('warn','proc',`3.1 = ${fmt(num(f.s31))} กก./รอบ ไม่ตรงกับ 1.8.1 = ${fmt(num(f.kgRound))} กก./รอบ`);
+ if(num(f.kgMonth)&&num(f.kgYear)&&num(f.monthsYear)){const e=num(f.kgMonth)*num(f.monthsYear);if(Math.abs(e-num(f.kgYear))/num(f.kgYear)>.1){const m=c.estMonth||num(f.kgMonth),y=m*num(f.monthsYear),set=[['f.kgYear',sv(y)]];if(c.estMonth&&Math.abs(c.estMonth-num(f.kgMonth))>1e-9)set.push(['f.kgMonth',sv(c.estMonth)]);W('warn','info',`1.7 ต่อปี ${fmt(num(f.kgYear))} กก. ≠ ต่อเดือน × เดือน/ปี (${fmt(e)} กก.)`,{lbl:`ต่อปี = ${fmt(y)} กก.`+(set.length>1?` และต่อเดือน = ${fmt(m)} กก.`:''),set})}}
+ if(c.estMonth&&num(f.kgMonth)&&Math.abs(c.estMonth-num(f.kgMonth))/num(f.kgMonth)>.15)W('warn','info',`1.7 ต่อเดือน ${fmt(num(f.kgMonth))} กก. ≠ 1.8.2 ต่อวัน × วัน/เดือน (${fmt(c.estMonth)} กก.)`,{lbl:`ต่อเดือน = ${fmt(c.estMonth)} กก.`+(num(f.monthsYear)?` และต่อปี = ${fmt(c.estMonth*num(f.monthsYear))} กก.`:''),set:[['f.kgMonth',sv(c.estMonth)]].concat(num(f.monthsYear)?[['f.kgYear',sv(c.estMonth*num(f.monthsYear))]]:[])});
+ t.sizes.forEach((r,i)=>{if(r.u==='kg'&&num(r.w)>5)W('warn','sales',`1.9 แถว ${i+1}: น้ำหนัก ${r.w} กก./${P.bags[i]||''} สูงผิดปกติ — น่าจะเป็นกรัม`,{lbl:`เปลี่ยนเป็น ${r.w} กรัม/${P.bags[i]||''}`,set:[[`t.sizes.${i}.u`,'g']]})});
+ if(c.salesKg&&num(f.kgMonth)){const ra=c.salesKg/num(f.kgMonth);if(ra<.7||ra>1.3)W('warn','sales',`ยอดจำหน่าย/เดือน (1.9) = ${fmt(c.salesKg)} กก. ไม่สอดคล้องกับผลิต/เดือน (1.7) = ${fmt(num(f.kgMonth))} กก. — ต้องสอบถามผู้ประกอบการ (ระบบไม่เดาจำนวนขายแทน)`)}
+ if(num(f.s31)&&num(f.kgRound)&&Math.abs(num(f.s31)-num(f.kgRound))/num(f.kgRound)>.15)W('warn','proc',`3.1 = ${fmt(num(f.s31))} กก./รอบ ไม่ตรงกับ 1.8.1 = ${fmt(num(f.kgRound))} กก./รอบ`,{lbl:`3.1 = ${fmt(num(f.kgRound))} กก./รอบ`,set:[['f.s31',sv(num(f.kgRound))]]});
  PTY(d).stages.forEach((st,si)=>{const sid='S'+si,fk=(P.flow[si]||{}).k,on=fk&&f[fk];
   st.blocks.forEach(b=>{const rows=t[b.id]||[],rd=TT[b.id].rows;
    if(b.type==='mach')rows.forEach((r,i)=>{if(has(r.rate)&&!/^[\d.,\s]+$/.test(r.rate))W('info',sid,`${b.no} ${(rd[i]||{}).n||r.n||''}: อัตราการทำงาน "${r.rate}" ควรเป็นหน่วย กก./ชม.`)});
    if(b.type==='dusage'){rows.forEach((r,i)=>{if(num(r.wb)&&num(r.wa)>num(r.wb))W('warn',sid,`${b.no} แถว ${i+1}: น้ำหนักหลังตากแห้งมากกว่าก่อนตาก`)});
-    const ob=(b.bullets||[]).slice(-1)[0];if(ob&&num(f[ob.k])&&c.wa&&Math.abs(c.wa-num(f[ob.k]))/num(f[ob.k])>.15)W('info',sid,`ผลรวมน้ำหนักหลังตาก ${fmt(c.wa)} กก. ≠ ${ob.l} ${fmt(num(f[ob.k]))} กก./รอบ`)}
-   if(b.type==='tray'&&c.trayArea&&c.dryArea&&Math.abs(c.trayArea-c.dryArea)/c.dryArea>.1)W('warn',sid,`พื้นที่ภาชนะรวม (${b.no}) = ${fmt(c.trayArea,3)} ตร.ม. ไม่ตรงกับพื้นที่ตากแห้งจริง = ${fmt(c.dryArea,3)} ตร.ม.`)});
+    const ob=(b.bullets||[]).slice(-1)[0];if(ob&&num(f[ob.k])&&c.wa&&Math.abs(c.wa-num(f[ob.k]))/num(f[ob.k])>.15)W('warn',sid,`ผลรวมน้ำหนักหลังตาก ${fmt(c.wa)} กก. ≠ ${ob.l} ${fmt(num(f[ob.k]))} กก./รอบ`,{lbl:`${ob.l} = ${fmt(c.wa)} กก./รอบ`,set:[['f.'+ob.k,sv(c.wa)]]})}
+   if(b.type==='tray'&&c.trayArea&&c.dryArea&&Math.abs(c.trayArea-c.dryArea)/c.dryArea>.1){const du=st.blocks.find(x=>x.type==='dusage'),set=du?(t[du.id]||[]).map((r,i)=>has(r.area)?[`t.${du.id}.${i}.area`,sv(c.trayArea)]:null).filter(Boolean):[],rt=c.dryArea/c.trayArea,set2=(t[b.id]||[]).map((r,i)=>has(r.cnt)?[`t.${b.id}.${i}.cnt`,sv(num(r.cnt)*rt)]:null).filter(Boolean),fx=[];if(set.length)fx.push({lbl:`พื้นที่ตากแห้งจริง = ${fmt(c.trayArea,3)} ตร.ม. (ยึดขนาดภาชนะ)`,set});if(set2.length)fx.push({lbl:`ปรับอันต่อรอบ ×${fmt(rt,2)} ให้พื้นที่ภาชนะ = ${fmt(c.dryArea,3)} ตร.ม. (ยึดพื้นที่ตากจริง)`,set:set2});W('warn',sid,`พื้นที่ภาชนะรวม (${b.no}) = ${fmt(c.trayArea,3)} ตร.ม. ไม่ตรงกับพื้นที่ตากแห้งจริง = ${fmt(c.dryArea,3)} ตร.ม.`,fx.length?fx:null)}});
   const filled=st.blocks.some(b=>(t[b.id]||[]).some(r=>Object.keys(r).some(k=>!['n','x'].includes(k)&&has(r[k])))||(b.type==='musage'&&has(f[b.fp+'kw'])));
   if(on&&!st.pack&&!filled&&!(st.noneKey&&f[st.noneKey]))W('warn',sid,`ขั้นตอน “${st.title}” ถูกเลือกไว้ แต่ยังไม่กรอกข้อ ${st.no}`)});
- if(c.lpg342&&c.lpg42Sum&&Math.abs(c.lpg342-c.lpg42Sum)/c.lpg42Sum>.1)W('warn','cost',`LPG ในส่วนที่ 3 (${fmt(c.lpg342)} กก.) ≠ ส่วนที่ 4.2 (${fmt(c.lpg42Sum)} กก./รอบ)`);
+ if(c.lpg342&&c.lpg42Sum&&Math.abs(c.lpg342-c.lpg42Sum)/c.lpg42Sum>.1){const ri=t.lpg42.findIndex(r=>has(r.kg));W('warn','cost',`LPG ในส่วนที่ 3 (${fmt(c.lpg342)} กก.) ≠ ส่วนที่ 4.2 (${fmt(c.lpg42Sum)} กก./รอบ)`,ri>=0&&t.lpg42.filter(r=>has(r.kg)).length===1?{lbl:`4.2 = ${fmt(c.lpg342)} กก./รอบ (ตามส่วนที่ 3)`,set:[[`t.lpg42.${ri}.kg`,sv(c.lpg342)]]}:null)}
  if(c.unitPrice&&(c.unitPrice<2.5||c.unitPrice>9))W('warn','cost',`ค่าไฟเฉลี่ย ${fmt(c.unitPrice)} บาท/หน่วย ผิดปกติ — ตรวจหน่วย/บาท`);
  if(c.billUnits&&c.kwhMonthEst>c.billUnits*1.2)W('warn','cost',`ไฟฟ้าที่คำนวณจากเครื่องจักร ${fmt(c.kwhMonthEst)} หน่วย/เดือน มากกว่าบิล ${fmt(c.billUnits)} หน่วย`);
  if(!P.flow.some(x=>f[x.k]))W('err','proc','ยังไม่เลือกขั้นตอนกระบวนการผลิต (หน้า 4)');
@@ -460,7 +461,12 @@ const GROW=name=>name==='raw32'||['musage','susage','dusage'].includes((BLOCKS(c
 function TBL(name){const S2=T(cur)[name],g=GROW(name),base=S2.rows.length;return `<div class="tbl">${cur.t[name].map((r,i)=>{const def=S2.rows[i]||{free:1};
  const head=def.free?`<input data-p="t.${name}.${i}.n" value="${esc(r.n||'')}" placeholder="รายการเพิ่มเติม (ถ้ามี)">`:`<b>${def.n}</b>${def.spec?`<input data-p="t.${name}.${i}.x" value="${esc(r.x||'')}" placeholder="ระบุ${def.suf?' ('+def.suf.trim()+')':''}">`:''}`;
  return `<div class="row"><div class="rh"><i>${i+1}</i>${head}${g&&i>=base?`<button class="btn danger" style="padding:5px 10px" onclick="delRow('${name}',${i})" aria-label="ลบแถว">✕</button>`:''}</div><div class="rg">${S2.cols.map(col=>col.calc?`<div class="calc sm"><span>${col.l}</span><b data-c="${name}.${i}.${col.k}">-</b></div>`:col.opts?SEL(`t.${name}.${i}.${col.k}`,col.opts,col.l):F(`t.${name}.${i}.${col.k}`,col.l,{type:col.num?'num':'text',unit:col.unit,ph:(def.pre&&def.pre[col.k])||col.ph})).join('')}</div></div>`}).join('')}${g?`<button class="btn" style="width:100%;border-style:dashed" onclick="addRow('${name}')">➕ เพิ่มแถววัตถุดิบ</button>`:''}</div>`}
-function stepWarn(id){const ws=checks(cur,calc(cur)).filter(x=>x.step===id&&x.lvl!=='info');return ws.length?`<div class="card">${ws.map(x=>`<div class="warnbox ${x.lvl}">${x.lvl==='err'?'⛔':'⚠️'} <span>${esc(x.msg)}</span></div>`).join('')}</div>`:''}
+const FIXL=x=>!x.fix?[]:Array.isArray(x.fix)?x.fix:[x.fix];
+const FIXB=(x,i)=>FIXL(x).map((f,k)=>`<div class="fixrow"><button class="btn pri" onclick="applyFix(${i},${k})">🧮 ${FIXL(x).length>1?'ทางเลือก '+(k+1)+': ':'ใช้ค่าที่คำนวณ: '}${esc(f.lbl)}</button></div>`).join('');
+function stepWarn(id){const all=checks(cur,calc(cur)),ws=all.map((x,i)=>[x,i]).filter(([x])=>x.step===id&&x.lvl!=='info');return ws.length?`<div class="card">${ws.map(([x,i])=>`<div class="warnbox ${x.lvl}">${x.lvl==='err'?'⛔':'⚠️'} <div style="flex:1"><span>${esc(x.msg)}</span>${FIXB(x,i)}</div></div>`).join('')}</div>`:''}
+function applyFix(i,k=0){const x=checks(cur,calc(cur))[i],fx=x&&FIXL(x)[k];if(!fx)return;const ch=fx.set.map(([p,val])=>{const old=getP(cur,p);setP(cur,p,val);return `${old??'-'} → ${val}`});
+ const [dd,mm]=thDate3(new Date().toISOString().slice(0,10));cur.f.reviewNote=(cur.f.reviewNote?cur.f.reviewNote+'\n':'')+`[ปรับให้สอดคล้อง ${dd} ${mm}] ${fx.lbl} (เดิม: ${ch.join(', ')})`;
+ touch();renderEditor();toast('ปรับค่าแล้ว — บันทึกค่าเดิมไว้ในช่อง “จุดที่ต้องตรวจซ้ำ”')}
 
 /* ========== steps ========== */
 function st1(){return `${stepWarn(0)}
@@ -529,7 +535,7 @@ function st12(){const a=certAuto();return CARD('','📄 ใบรับรอง
 
 function st13(){const c=calc(cur),w=checks(cur,c),p=progress(cur);const ne=w.filter(x=>x.lvl==='err').length;
  return `<div class="card"><div class="sec">📊 ความครบถ้วน ${p}% ${ne?`<span class="badge err">⛔ ${ne} ต้องแก้</span>`:''} ${w.length-ne?`<span class="badge warn">⚠️ ${w.length-ne} ควรตรวจ</span>`:''} ${!w.length?'<span class="badge ok">✓ พร้อมส่ง</span>':''}</div><div class="prog"><i style="width:${p}%"></i></div>
- ${w.map(x=>`<div class="warnbox ${x.lvl}">${x.lvl==='err'?'⛔':x.lvl==='warn'?'⚠️':'ℹ️'} <span>${esc(x.msg)}</span><button class="btn" onclick="toStepId('${x.step}')">แก้ไข</button></div>`).join('')}</div>
+ ${w.some(x=>x.fix)?`<div class="tip">🧮 จุดที่มีปุ่มสีเขียว ระบบคำนวณค่าที่สอดคล้องให้แล้ว (ยึดปริมาณต่อรอบ/ต่อวัน ข้อ 1.8 เป็นหลัก) — กดเพื่อใช้ค่าได้ทีละจุด</div>`:''}${w.map((x,i)=>`<div class="warnbox ${x.lvl}">${x.lvl==='err'?'⛔':x.lvl==='warn'?'⚠️':'ℹ️'} <div style="flex:1"><span>${esc(x.msg)}</span>${FIXB(x,i)}</div><button class="btn" onclick="toStepId('${x.step}')">ไปที่ข้อ</button></div>`).join('')}</div>
  <div class="card"><div class="sec">⚡ สรุปการใช้พลังงาน (ต่อรอบการผลิต)</div><div class="kpis">
  <div class="kpi"><span>ไฟฟ้า</span><b>${fmt(c.kwhRound,3)}</b> <small>kWh/รอบ</small></div>
  <div class="kpi"><span>ก๊าซ LPG</span><b>${fmt(c.lpgRound)}</b> <small>กก./รอบ</small></div>
